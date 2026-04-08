@@ -9,7 +9,7 @@ import com.mycompany.ltw.utils.DBContext;
 
 public class UserDAO extends DBContext {
 
-    // 1. Hàm Đăng nhập: Trả về đối tượng User đầy đủ kèm danh sách Roles
+    
     public User login(String email, String password) {
         String sql = "SELECT * FROM user WHERE email = ? AND password = ? AND is_active = 1";
         try (Connection conn = getConnection(); 
@@ -25,9 +25,10 @@ public class UserDAO extends DBContext {
                 u.setEmail(rs.getString("email"));
                 u.setFirstName(rs.getString("first_name"));
                 u.setLastName(rs.getString("last_name"));
-                u.setActive(rs.getBoolean("is_active"));
+                u.setIsActive(rs.getBoolean("is_active"));
+                u.setCreatedAt(rs.getTimestamp("created_at"));
                 
-                // Quan trọng: Lấy luôn danh sách quyền của User này
+                // Lấy danh sách quyền để Filter có thể kiểm tra (ROLE_ADMIN/ROLE_USER)
                 u.setRoles(getUserRoles(u.getId()));
                 return u;
             }
@@ -37,7 +38,7 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-    // 2. Hàm lấy danh sách quyền (Roles) từ bảng trung gian user_roles
+  
     private List<Role> getUserRoles(Long userId) {
         List<Role> roles = new ArrayList<>();
         String sql = "SELECT r.id, r.name FROM role r " +
@@ -57,17 +58,16 @@ public class UserDAO extends DBContext {
         return roles;
     }
 
-    // 3. Hàm Đăng ký: Sử dụng Transaction để lưu vào 2 bảng cùng lúc
     public boolean register(User user) {
-        String sqlUser = "INSERT INTO user (first_name, last_name, email, password, is_active) VALUES (?, ?, ?, ?, 1)";
+        String sqlUser = "INSERT INTO user (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
         String sqlRole = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
         
         Connection conn = null;
         try {
             conn = getConnection();
-            conn.setAutoCommit(false); // Bắt đầu giao dịch (Transaction)
+            conn.setAutoCommit(false); // Bắt đầu Transaction
 
-            // Bước A: Thêm vào bảng user và lấy ID tự tăng vừa tạo
+            // Bước A: Thêm User mới
             PreparedStatement psUser = conn.prepareStatement(sqlUser, Statement.RETURN_GENERATED_KEYS);
             psUser.setString(1, user.getFirstName());
             psUser.setString(2, user.getLastName());
@@ -75,24 +75,29 @@ public class UserDAO extends DBContext {
             psUser.setString(4, user.getPassword());
             psUser.executeUpdate();
 
+            // Lấy ID vừa tự động tăng trong DB
             ResultSet rs = psUser.getGeneratedKeys();
             if (rs.next()) {
                 long newUserId = rs.getLong(1);
                 
-                // Bước B: Gán quyền mặc định là ROLE_USER (Giả sử ID của ROLE_USER là 2)
+                // Bước B: Gán quyền mặc định (ID = 2 là ROLE_USER theo script DB)
                 PreparedStatement psRole = conn.prepareStatement(sqlRole);
                 psRole.setLong(1, newUserId);
                 psRole.setLong(2, 2); 
                 psRole.executeUpdate();
             }
 
-            conn.commit(); // Thành công hết thì mới lưu thật vào DB
+            conn.commit(); // Lưu vĩnh viễn vào DB nếu cả 2 bước thành công
             return true;
         } catch (Exception e) {
-            if (conn != null) try { conn.rollback(); } catch (SQLException ex) {} // Lỗi thì hủy hết
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
             e.printStackTrace();
         } finally {
-            if (conn != null) try { conn.close(); } catch (SQLException ex) {}
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
         }
         return false;
     }

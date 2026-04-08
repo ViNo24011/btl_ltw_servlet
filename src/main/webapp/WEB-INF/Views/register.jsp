@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Register - lakeSide Hotel</title>
+    <title>Register - Proj Hotel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
             :root {
@@ -51,7 +51,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
         <div class="container">
-            <a class="navbar-brand" href="index">lakeSide Hotel</a>
+            <a class="navbar-brand" href="index">Proj Hotel</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="rooms">Browse all rooms</a></li>
@@ -111,7 +111,7 @@
     </div>
 
     <footer class="text-center">
-        <p class="mb-0">© 2026 lakeSide Hotel</p>
+        <p class="mb-0">© 2026 Proj Hotel</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

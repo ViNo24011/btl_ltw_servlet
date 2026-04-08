@@ -47,7 +47,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     boolean isRegistered = dao.register(newUser);
 
     if (isRegistered) {
-        // --- BẮT ĐẦU LOGIC TỰ ĐỘNG ĐĂNG NHẬP ---
+        
         // Gọi lại hàm login để lấy Object User đầy đủ (có ID và Roles từ DB)
         User authenticatedUser = dao.login(email, password);
         
@@ -62,7 +62,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             response.sendRedirect(request.getContextPath() + "/login?message=registered_please_login");
 
         }
-        // --- KẾT THÚC LOGIC TỰ ĐỘNG ĐĂNG NHẬP ---
+        
     } else {
         request.setAttribute("error", "Email này đã được sử dụng!");
         request.getRequestDispatcher("/WEB-INF/Views/register.jsp").forward(request, response);

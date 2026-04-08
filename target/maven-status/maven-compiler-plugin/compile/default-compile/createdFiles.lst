@@ -1,3 +1,5 @@
+com\mycompany\ltw\controller\LogoutServlet.class
+com\mycompany\ltw\controller\HomeServlet.class
 com\mycompany\ltw\utils\DBContext.class
 com\mycompany\ltw\model\BookingRoom.class
 com\mycompany\ltw\resources\JakartaEE8Resource.class
@@ -13,3 +15,4 @@ com\mycompany\ltw\model\Booking.class
 com\mycompany\ltw\model\Role.class
 com\mycompany\ltw\controller\LoginServlet.class
 com\mycompany\ltw\model\Room.class
+com\mycompany\ltw\model\Voucher.class
