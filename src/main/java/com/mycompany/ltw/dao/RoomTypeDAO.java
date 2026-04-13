@@ -6,12 +6,12 @@ import com.mycompany.ltw.utils.DBContext;
 import java.sql.*;
 import java.util.*;
 
-public class RoomTypeDAO {
+public class RoomTypeDAO extends DBContext {
 
     public List<RoomType> getAll() {
         List<RoomType> list = new ArrayList<>();
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = getConnection();
              Statement st = conn.createStatement()) {
 
             ResultSet rs = st.executeQuery("SELECT * FROM room_type");
@@ -36,7 +36,7 @@ public class RoomTypeDAO {
     public void insert(RoomType rt) {
         String sql = "INSERT INTO room_type(name, base_price, max_capacity, description) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, rt.getName());

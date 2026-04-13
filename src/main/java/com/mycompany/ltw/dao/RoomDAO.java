@@ -6,7 +6,7 @@ import com.mycompany.ltw.utils.DBContext;
 import java.sql.*;
 import java.util.*;
 
-public class RoomDAO {
+public class RoomDAO extends DBContext {
 
     public List<Room> getRooms(int page, int size) {
         List<Room> list = new ArrayList<>();
@@ -15,7 +15,7 @@ public class RoomDAO {
                 + "FROM room r JOIN room_type rt ON r.room_type_id = rt.id "
                 + "LIMIT ?, ?";
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, (page - 1) * size);
@@ -54,7 +54,7 @@ public class RoomDAO {
         String sql = "SELECT r.*, rt.name, rt.base_price, rt.max_capacity, rt.description "
                 + "FROM room r JOIN room_type rt ON r.room_type_id = rt.id WHERE r.id=?";
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, id);
@@ -89,7 +89,7 @@ public class RoomDAO {
     public void insert(Room r) {
         String sql = "INSERT INTO room(room_type_id, room_number, photo, status) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, r.getRoomTypeId());
@@ -106,7 +106,7 @@ public class RoomDAO {
     public void update(Room r) {
         String sql = "UPDATE room SET room_type_id=?, room_number=?, photo=?, status=? WHERE id=?";
 
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, r.getRoomTypeId());
@@ -122,7 +122,7 @@ public class RoomDAO {
     }
 
     public void delete(Long id) {
-        try (Connection conn = DBContext.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement("DELETE FROM room WHERE id=?")) {
 
             ps.setLong(1, id);
@@ -133,7 +133,7 @@ public class RoomDAO {
     }
     public int countRooms() {
     String sql = "SELECT COUNT(*) FROM room";
-    try (Connection conn = DBContext.getConnection();
+    try (Connection conn = getConnection();
          PreparedStatement ps = conn.prepareStatement(sql)) {
 
         ResultSet rs = ps.executeQuery();

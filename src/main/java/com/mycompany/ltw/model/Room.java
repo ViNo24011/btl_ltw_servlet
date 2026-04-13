@@ -20,4 +20,9 @@ public class Room {
     public void setPhoto(String photo) { this.photo = photo; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    
+    // RoomType object for display purposes
+    private RoomType roomType;
+    public RoomType getRoomType() { return roomType; }
+    public void setRoomType(RoomType roomType) { this.roomType = roomType; }
 }
