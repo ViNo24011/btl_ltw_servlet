@@ -4,10 +4,9 @@ com\mycompany\ltw\utils\DBContext.class
 com\mycompany\ltw\model\BookingRoom.class
 com\mycompany\ltw\resources\JakartaEE8Resource.class
 com\mycompany\ltw\utils\AuthFilter.class
+com\mycompany\ltw\controller\UserServlet.class
 com\mycompany\ltw\model\User.class
-com\mycompany\ltw\dao\NewClass.class
 com\mycompany\ltw\dao\UserDAO.class
-com\mycompany\ltw\controller\NewClass.class
 com\mycompany\ltw\model\RoomType.class
 com\mycompany\ltw\JakartaRestConfiguration.class
 com\mycompany\ltw\controller\RegisterServlet.class

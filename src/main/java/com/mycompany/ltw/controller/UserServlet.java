@@ -115,7 +115,7 @@ public class UserServlet extends HttpServlet {
         String email = request.getParameter("email");
 
         if (userDAO.isEmailExists(email, sessionUser.getId())) {
-            request.setAttribute("error", "Email dã du?c s? d?ng b?i tài kho?n khác.");
+            request.setAttribute("error", "Email đã được sử dụng bới tài khoản khác.");
             showProfile(request, response, true);
             return;
         }
@@ -133,7 +133,7 @@ public class UserServlet extends HttpServlet {
             session.setAttribute("user", fresh);
             response.sendRedirect(request.getContextPath() + "/profile?success=updated");
         } else {
-            request.setAttribute("error", "C?p nh?t h? so th?t b?i.");
+            request.setAttribute("error", "Cập nhật hồ sơ thất bại.");
             showProfile(request, response, true);
         }
     }
@@ -153,7 +153,7 @@ public class UserServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Integer lastSeenCount = (Integer) session.getAttribute("lastVoucherCount");
         if (lastSeenCount != null && vouchers.size() > lastSeenCount) {
-            request.setAttribute("newVoucherMessage", "B?n có voucher m?i.");
+            request.setAttribute("newVoucherMessage", "Bạn có voucher mới.");
         }
         session.setAttribute("lastVoucherCount", vouchers.size());
 
@@ -233,7 +233,7 @@ public class UserServlet extends HttpServlet {
         if (ok) {
             response.sendRedirect(request.getContextPath() + "/admin/users?success=created");
         } else {
-            request.setAttribute("error", "Thêm tài kho?n th?t b?i.");
+            request.setAttribute("error", "Thêm tài khoản thất bại.");
             showUserFormForAdmin(request, response, null);
         }
     }
@@ -261,7 +261,7 @@ public class UserServlet extends HttpServlet {
         boolean isActive = "on".equals(request.getParameter("isActive"));
 
         if (userDAO.isEmailExists(email, id)) {
-            request.setAttribute("error", "Email dã t?n t?i.");
+            request.setAttribute("error", "Email dã tồn tại.");
             showUserFormForAdmin(request, response, id);
             return;
         }
@@ -277,7 +277,7 @@ public class UserServlet extends HttpServlet {
         if (ok) {
             response.sendRedirect(request.getContextPath() + "/admin/users?success=updated");
         } else {
-            request.setAttribute("error", "C?p nh?t tài kho?n th?t b?i.");
+            request.setAttribute("error", "Cập nhật tài khoản thất bại.");
             showUserFormForAdmin(request, response, id);
         }
     }
