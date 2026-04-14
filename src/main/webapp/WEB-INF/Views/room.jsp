@@ -1,29 +1,177 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<h2>Danh sách phòng</h2>
+<html>
+<head>
+    <title>Rooms - Proj Hotel</title>
 
-<a href="room?action=new">Thêm phòng</a>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<c:forEach var="r" items="${rooms}">
-    <div style="border:1px solid #ccc; margin:10px; padding:10px;">
-        <h3>Phòng ${r.roomNumber}</h3>
+    <style>
+        :root {
+            --main-color: #a64d79;
+            --hover-color: #8e3a64;
+        }
 
-        <img src="${r.photo}" width="150"/>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-        <p>Loại: ${r.roomType.name}</p>
-        <p>Giá: ${r.roomType.basePrice}</p>
-        <p>Sức chứa: ${r.roomType.maxCapacity}</p>
+        .navbar-brand {
+            color: var(--main-color) !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
 
-        <a href="room?action=detail&id=${r.id}">Chi tiết</a>
-        <a href="room?action=edit&id=${r.id}">Sửa</a>
-        <a href="room?action=delete&id=${r.id}">Xóa</a>
+        .btn-custom {
+            background-color: var(--main-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: var(--hover-color);
+            color: white;
+        }
+
+        .room-title {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .room-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .room-img {
+            height: 180px;
+            object-fit: cover;
+        }
+
+        footer {
+            background-color: #212529;
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container">
+        <a class="navbar-brand" href="index">Proj Hotel</a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/room">
+                        Browse Rooms
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="find-booking">Find booking</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="login">Login</a>
+                </li>
+            </ul>
+        </div>
     </div>
-</c:forEach>
+</nav>
 
-<!-- PAGINATION -->
-<div>
-    <c:forEach begin="1" end="${totalPage}" var="i">
-        <a href="room?page=${i}">${i}</a>
-    </c:forEach>
+<!-- TITLE -->
+<div class="container">
+    <h2 class="room-title">Available Rooms</h2>
+
+    <div class="row">
+
+        <c:forEach var="r" items="${rooms}">
+            <div class="col-md-4 mb-4">
+
+                <div class="card room-card">
+
+                    <!-- FIX IMAGE -->
+                    <img class="card-img-top room-img"
+                         src="${r.photo != null ? r.photo : 'https://via.placeholder.com/300'}"/>
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Room ${r.roomNumber}
+                        </h5>
+
+                        <p class="card-text">
+                            Type: ${r.roomType.name}
+                        </p>
+
+                        <p class="text-danger fw-bold">
+                            ${r.roomType.basePrice} VND / night
+                        </p>
+
+                        <p>
+                            Capacity: ${r.roomType.maxCapacity}
+                        </p>
+
+                        <div class="d-flex justify-content-between">
+
+                            <!-- FIX CONTEXT PATH -->
+                            <a href="${pageContext.request.contextPath}/room?action=detail&id=${r.id}"
+                               class="btn btn-secondary btn-sm">
+                                Detail
+                            </a>
+
+                            <a href="${pageContext.request.contextPath}/booking?action=create&roomId=${r.id}"
+                               class="btn btn-custom btn-sm">
+                                Book
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </c:forEach>
+
+    </div>
+
+    <!-- PAGINATION (GIỮ STYLE CŨ, CHỈ THÊM LOGIC) -->
+    <div class="text-center mt-4">
+
+        <c:forEach begin="1" end="${totalPages}" var="i">
+
+            <a href="${pageContext.request.contextPath}/room?page=${i}"
+               class="btn btn-sm ${i == currentPage ? 'btn-dark' : 'btn-outline-dark'}">
+                ${i}
+            </a>
+
+        </c:forEach>
+
+    </div>
+
 </div>
+
+<!-- FOOTER -->
+<footer class="text-center">
+    <p class="mb-0">© 2026 Proj Hotel</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
