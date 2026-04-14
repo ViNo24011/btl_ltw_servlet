@@ -27,3 +27,18 @@
 
     <button type="submit">Lưu</button>
 </form>
+<h2>Thêm / Sửa phòng</h2>
+
+<form action="room" method="post">
+    <input type="hidden" name="action" value="save"/>
+    <input type="hidden" name="id" value="${room.id}"/>
+
+    Số phòng:
+    <input type="text" name="roomNumber" value="${room.roomNumber}"/><br/>
+
+    Ảnh (url):
+    <input type="text" name="photo" value="${room.photo}"/><br/>
+
+    <button type="submit">Lưu</button>
+</form>
+    
