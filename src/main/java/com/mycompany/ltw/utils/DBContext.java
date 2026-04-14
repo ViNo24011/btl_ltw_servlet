@@ -6,10 +6,10 @@ import java.sql.DriverManager;
 public class DBContext {
     
     private final String serverName = "localhost";
-    private final String dbName = "hotel_booking_db";
+    private final String dbName = "LTW";
     private final String portNumber = "3306";
     private final String userID = "root";
-    private final String password = "241105"; // Thay pass vào đây
+    private final String password = "123456"; // Thay pass vào đây
 
     public Connection getConnection() throws Exception {
         String url = "jdbc:mysql://" + serverName + ":" + portNumber + "/" + dbName;
