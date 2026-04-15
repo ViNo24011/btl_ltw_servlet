@@ -30,6 +30,7 @@ public class RoomTypeDAO extends DBContext {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return list;
     }
 
