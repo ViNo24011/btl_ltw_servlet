@@ -1,5 +1,7 @@
 package com.mycompany.ltw.model;
 
+import java.math.BigDecimal;
+
 public class Room {
     private Long id;
 
@@ -12,6 +14,9 @@ public class Room {
 
     // 🔥 thêm để JOIN + hiển thị
     private RoomType roomType;
+    
+    // 🔥 thêm để truy cập giá từ JSP
+    private BigDecimal basePrice;
 
     public Room() {}
 
@@ -35,4 +40,14 @@ public class Room {
     // 🔥 phần mới
     public RoomType getRoomType() { return roomType; }
     public void setRoomType(RoomType roomType) { this.roomType = roomType; }
+    
+    // Alias cho photo (tên khác để dễ dùng trong JSP)
+    public String getImage() { return photo; }
+    public void setImage(String image) { this.photo = image; }
+    
+    // Base price từ room type
+    public BigDecimal getBasePrice() { 
+        return basePrice != null ? basePrice : (roomType != null ? roomType.getBasePrice() : null); 
+    }
+    public void setBasePrice(BigDecimal basePrice) { this.basePrice = basePrice; }
 }

@@ -72,6 +72,49 @@ public class RoomDAO {
         return 0;
     }
 
+    // GET ALL ROOMS
+    public List<Room> getAll() {
+        List<Room> list = new ArrayList<>();
+        
+        String sql =
+            "SELECT r.*, rt.name, rt.base_price, rt.max_capacity, rt.description " +
+            "FROM room r " +
+            "JOIN room_type rt ON r.room_type_id = rt.id " +
+            "ORDER BY CAST(r.room_number AS UNSIGNED) ASC";
+
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                RoomType rt = new RoomType();
+                rt.setId(rs.getLong("room_type_id"));
+                rt.setName(rs.getString("name"));
+                rt.setBasePrice(rs.getBigDecimal("base_price"));
+                rt.setMaxCapacity(rs.getInt("max_capacity"));
+                rt.setDescription(rs.getString("description"));
+
+                Room r = new Room();
+                r.setId(rs.getLong("id"));
+                r.setRoomNumber(rs.getString("room_number"));
+                r.setPhoto(rs.getString("photo"));
+                r.setStatus(rs.getString("status"));
+                r.setRoomTypeId(rs.getLong("room_type_id"));
+                r.setRoomType(rt);
+                r.setBasePrice(rs.getBigDecimal("base_price"));
+
+                list.add(r);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     // GET BY ID
     public Room getById(Long id) {
         String sql =

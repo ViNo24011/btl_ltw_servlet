@@ -479,38 +479,16 @@
     <section class="section" id="rooms">
         <h2>Browse rooms</h2>
         <div class="cards">
-            <article class="room-card">
-                <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=900&q=80" alt="Room type 1">
-                <div class="content">
-                    <h3>New Room Type</h3>
-                    <p>$20/night</p>
-                    <a href="#bookings">View/Book Now</a>
-                </div>
-            </article>
-            <article class="room-card">
-                <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=900&q=80" alt="Room type 2">
-                <div class="content">
-                    <h3>New Room Type</h3>
-                    <p>$100/night</p>
-                    <a href="#bookings">View/Book Now</a>
-                </div>
-            </article>
-            <article class="room-card">
-                <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=900&q=80" alt="Room type 3">
-                <div class="content">
-                    <h3>New room Test</h3>
-                    <p>$200/night</p>
-                    <a href="#bookings">View/Book Now</a>
-                </div>
-            </article>
-            <article class="room-card">
-                <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80" alt="Room 15">
-                <div class="content">
-                    <h3>Room 15</h3>
-                    <p>$220/night</p>
-                    <a href="#bookings">View/Book Now</a>
-                </div>
-            </article>
+            <c:forEach var="room" items="${allRooms}" begin="0" end="3">
+                <article class="room-card">
+                    <img src="${room.image}" alt="${room.roomNumber}">
+                    <div class="content">
+                        <h3>${room.roomNumber}</h3>
+                        <p>$${room.basePrice}/night</p>
+                        <a href="${pageContext.request.contextPath}/room?action=detail&id=${room.id}">View/Book Now</a>
+                    </div>
+                </article>
+            </c:forEach>
         </div>
     </section>
 
@@ -520,10 +498,9 @@
                 <label for="roomFilter">Filter by room type:</label>
                 <select id="roomFilter">
                     <option value="ALL">select a room type to filter...</option>
-                    <option value="Family">Family</option>
-                    <option value="Suite">Suite</option>
-                    <option value="Single">Single</option>
-                    <option value="Deluxe">Deluxe</option>
+                    <c:forEach var="roomType" items="${roomTypes}">
+                        <option value="${roomType.id}">${roomType.name}</option>
+                    </c:forEach>
                 </select>
                 <button id="clearFilter" class="btn primary" type="button">Clear Filter</button>
             </div>
@@ -545,13 +522,19 @@
 </main>
 
 <script>
+    // Lấy dữ liệu từ server thay vì hardcode
     const allRooms = [
-        { type: 'Family', name: 'Family Suite 6', price: '$1000/night', image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80', desc: 'Some room descriptions and services information can go here for customers to read.' },
-        { type: 'Suite', name: 'Triple Suite Two', price: '$240/night', image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80', desc: 'Premium comfort with extra lounge area and city view for short and long stays.' },
-        { type: 'Single', name: 'Single View', price: '$200/night', image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80', desc: 'Cozy single room perfect for solo travelers and business guests.' },
-        { type: 'Deluxe', name: 'Deluxe Ocean 2', price: '$320/night', image: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=800&q=80', desc: 'Spacious deluxe room with modern amenities and elegant interior.' },
-        { type: 'Suite', name: 'Executive Suite 9', price: '$420/night', image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80', desc: 'A polished executive setup tailored for meetings and premium relaxation.' },
-        { type: 'Family', name: 'Family Horizon', price: '$360/night', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80', desc: 'Family-friendly layout with additional beds and child-safe corners.' }
+        <c:forEach var="room" items="${allRooms}" varStatus="loop">
+        {
+            id: ${room.id},
+            type: '${room.roomTypeId}',
+            name: '${room.roomNumber}',
+            price: '\\$${room.basePrice}/night',
+            image: '${not empty room.image ? room.image : "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80"}',
+            desc: 'Room ${room.roomNumber} - Available for booking'
+        }
+        <c:if test="${!loop.last}">,</c:if>
+        </c:forEach>
     ];
 
     const pageSize = 3;
@@ -584,19 +567,19 @@
         if (viewRooms.length === 0) {
             resultList.innerHTML = '<div class="empty-state">No rooms found for this filter. Try another room type.</div>';
         } else {
-            resultList.innerHTML = viewRooms.map(room => `
-                <article class="result-item">
-                    <img src="${room.image}" alt="${room.name}">
-                    <div>
-                        <h3>${room.name}</h3>
-                        <div class="price">${room.price}</div>
-                        <p class="desc">${room.desc}</p>
-                    </div>
-                    <div class="cta">
-                        <button class="btn primary" type="button">View/Book Now</button>
-                    </div>
-                </article>
-            `).join('');
+            resultList.innerHTML = viewRooms.map(room => {
+                return '<article class="result-item">' +
+                    '<img src="' + room.image + '" alt="' + room.name + '">' +
+                    '<div>' +
+                    '<h3>' + room.name + '</h3>' +
+                    '<div class="price">' + room.price + '</div>' +
+                    '<p class="desc">' + room.desc + '</p>' +
+                    '</div>' +
+                    '<div class="cta">' +
+                    '<a href="${pageContext.request.contextPath}/room?action=detail&id=' + room.id + '" class="btn primary">View/Book Now</a>' +
+                    '</div>' +
+                    '</article>';
+            }).join('');
         }
 
         renderPager(totalPages);
@@ -608,7 +591,7 @@
             const btn = document.createElement('button');
             btn.className = 'page-btn' + (i === currentPage ? ' active' : '');
             btn.textContent = i;
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', function() {
                 currentPage = i;
                 renderRooms();
             });
@@ -616,13 +599,13 @@
         }
     }
 
-    roomFilter.addEventListener('change', (e) => {
+    roomFilter.addEventListener('change', function(e) {
         selectedType = e.target.value;
         currentPage = 1;
         renderRooms();
     });
 
-    clearFilter.addEventListener('click', () => {
+    clearFilter.addEventListener('click', function() {
         selectedType = 'ALL';
         roomFilter.value = 'ALL';
         currentPage = 1;
