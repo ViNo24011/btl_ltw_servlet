@@ -423,7 +423,7 @@
     <header class="topbar">
         <div class="brand"><span class="accent">lake</span>Side Hotel</div>
         <nav class="menu">
-            <a href="#rooms">Browse all rooms</a>
+            <a href="${pageContext.request.contextPath}/room">Browse all rooms</a>
             <c:set var="isAdmin" value="false" />
             <c:forEach var="role" items="${sessionScope.user.roles}">
                 <c:if test="${role.name == 'ROLE_ADMIN'}">
@@ -431,7 +431,7 @@
                 </c:if>
             </c:forEach>
             <c:if test="${isAdmin}">
-                <a href="${pageContext.request.contextPath}/roomtype">Manage Rooms</a>
+                <a href="${pageContext.request.contextPath}/roomtype">Manage</a>
             </c:if>
             <a href="#bookings">Find my booking</a>
             <c:choose>
@@ -477,7 +477,7 @@
     </section>
 
     <section class="section" id="rooms">
-        <h2>Browse rooms</h2>
+        <a href="${pageContext.request.contextPath}/room"><h2>Browse Rooms</h2></a>
         <div class="cards">
             <c:forEach var="room" items="${allRooms}" begin="0" end="3">
                 <article class="room-card">

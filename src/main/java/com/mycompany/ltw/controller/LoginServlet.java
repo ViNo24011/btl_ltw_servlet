@@ -38,10 +38,9 @@ public class LoginServlet extends HttpServlet {
                     .anyMatch(r -> "ROLE_ADMIN".equals(r.getName()));
 
             if (isAdmin) {
-                // 🔥 FIX QUAN TRỌNG Ở ĐÂY
-                response.sendRedirect(request.getContextPath() + "/admin/room?action=list");
+                response.sendRedirect(request.getContextPath() + "/home");
             } else {
-                response.sendRedirect(request.getContextPath() + "/room");
+                response.sendRedirect(request.getContextPath() + "/home");
             }
 
         } else {

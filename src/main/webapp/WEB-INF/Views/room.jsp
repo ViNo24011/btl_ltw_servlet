@@ -70,7 +70,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container">
-        <a class="navbar-brand" href="index">Proj Hotel</a>
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/home">Proj Hotel</a>
 
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
@@ -83,11 +83,26 @@
 
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="find-booking">Find booking</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/home#bookings">Find booking</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="login">Login</a>
-                </li>
+                <c:if test="${not empty sessionScope.user}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="usermenu" role="button" data-bs-toggle="dropdown">
+                            ${sessionScope.user.firstName}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Profile</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/vouchers">Vouchers</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </c:if>
+                <c:if test="${empty sessionScope.user}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/login">Login</a>
+                    </li>
+                </c:if>
             </ul>
         </div>
     </div>
