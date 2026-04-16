@@ -27,6 +27,7 @@
 
     <button type="submit">Lưu</button>
 </form>
+<<<<<<< Updated upstream
 <h2>Thêm / Sửa phòng</h2>
 
 <form action="room" method="post">
@@ -42,3 +43,5 @@
     <button type="submit">Lưu</button>
 </form>
     
+=======
+>>>>>>> Stashed changes

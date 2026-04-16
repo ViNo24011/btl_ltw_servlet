@@ -1,8 +1,14 @@
 package com.mycompany.ltw.model;
 
+<<<<<<< Updated upstream
 import java.math.BigDecimal;
 
 public class Room {
+=======
+import java.io.Serializable;
+
+public class Room implements Serializable{
+>>>>>>> Stashed changes
     private Long id;
 
     // ✔ giữ lại để insert/update DB
@@ -20,8 +26,21 @@ public class Room {
 
     public Room() {}
 
+<<<<<<< Updated upstream
     // ===== Getter / Setter =====
 
+=======
+    public Room(Long id, Long roomTypeId, String roomNumber, String photo, String status) {
+        this.id = id;
+        this.roomTypeId = roomTypeId;
+        this.roomNumber = roomNumber;
+        this.photo = photo;
+        this.status = status;
+
+    }
+
+    // Getters and Setters
+>>>>>>> Stashed changes
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<<<<<<< Updated upstream
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
@@ -142,3 +143,15 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+=======
+
+<h2>Chi tiết phòng</h2>
+
+<p>Số phòng: ${room.roomNumber}</p>
+<p>Loại: ${room.roomType.name}</p>
+<p>Giá: ${room.roomType.basePrice}</p>
+<p>Sức chứa: ${room.roomType.maxCapacity}</p>
+<p>Mô tả: ${room.roomType.description}</p>
+
+<img src="${room.photo}" width="200"/>
+>>>>>>> Stashed changes

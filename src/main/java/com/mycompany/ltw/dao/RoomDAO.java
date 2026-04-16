@@ -2,6 +2,7 @@ package com.mycompany.ltw.dao;
 
 import com.mycompany.ltw.model.*;
 import com.mycompany.ltw.utils.DBContext;
+import java.io.Serializable;
 
 import java.sql.*;
 import java.util.*;

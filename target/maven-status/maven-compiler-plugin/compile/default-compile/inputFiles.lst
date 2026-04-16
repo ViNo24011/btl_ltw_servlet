@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 D:\ltw\src\main\java\com\mycompany\ltw\utils\AuthFilter.java
 D:\ltw\src\main\java\com\mycompany\ltw\JakartaRestConfiguration.java
 D:\ltw\src\main\java\com\mycompany\ltw\model\Role.java
@@ -19,3 +20,29 @@ D:\ltw\src\main\java\com\mycompany\ltw\utils\DBContext.java
 D:\ltw\src\main\java\com\mycompany\ltw\controller\RegisterServlet.java
 D:\ltw\src\main\java\com\mycompany\ltw\model\BookingRoom.java
 D:\ltw\src\main\java\com\mycompany\ltw\model\Room.java
+=======
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\dao\BookingDAO.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\utils\DBContext.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\controller\BookingServlet.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\controller\UserServlet.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\model\Role.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\model\Room.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\model\BookingRoom.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\controller\RoomTypeServlet.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\controller\HomeServlet.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\controller\LoginServlet.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\model\Booking.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\dao\BookingRoomDAO.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\dao\RoomTypeDAO.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\controller\RoomServlet.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\dao\UserDAO.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\model\Voucher.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\model\RoomType.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\controller\LogoutServlet.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\controller\RegisterServlet.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\model\User.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\utils\AuthFilter.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\JakartaRestConfiguration.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\dao\RoomDAO.java
+C:\Users\Admin\Desktop\Java Project\ltw\ver2\btl_ltw_servlet\src\main\java\com\mycompany\ltw\resources\JakartaEE8Resource.java
+>>>>>>> Stashed changes

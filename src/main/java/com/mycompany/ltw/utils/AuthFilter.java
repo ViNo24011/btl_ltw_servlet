@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.*;
 import com.mycompany.ltw.model.User;
 
-@WebFilter(filterName = "AuthFilter", urlPatterns = {"/admin/*", "/booking/*", "/profile"})
+@WebFilter(filterName = "AuthFilter", urlPatterns = {"/admin/*", "/profile"})
 public class AuthFilter implements Filter {
 
     @Override
