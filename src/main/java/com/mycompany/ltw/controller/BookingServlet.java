@@ -219,7 +219,7 @@ public class BookingServlet extends HttpServlet {
             booking.setGuestName(guestName);
             booking.setGuestEmail(request.getParameter("guestEmail"));
             booking.setTotalAmount(totalAmount);
-            booking.setStatus("Unpaid");
+            booking.setStatus("PAID");
             // Create code
             session.setAttribute("confirmationCode", getConfirmationCode());
             booking.setConfirmationCode((String) session.getAttribute("confirmationCode"));

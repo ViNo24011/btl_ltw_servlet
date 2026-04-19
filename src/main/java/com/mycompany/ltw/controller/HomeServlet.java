@@ -37,8 +37,8 @@ public class HomeServlet extends HttpServlet {
 
             int totalRooms = adminDAO.getGlobalMetric("TOTAL_ROOMS");
             int totalBookings = adminDAO.getGlobalMetric("TOTAL_BOOKINGS");
-            int pendingBookings = adminDAO.getGlobalMetric("PENDING_BOOKINGS");
-            int completedBookings = adminDAO.getGlobalMetric("PAID_BOOKINGS");
+            int pendingBookings = adminDAO.getGlobalMetric("PAID_BOOKINGS_COUNT");
+            int completedBookings = adminDAO.getGlobalMetric("CHECKED_OUT_BOOKINGS");
 
             String fromDate = request.getParameter("fromDate");
             String toDate = request.getParameter("toDate");

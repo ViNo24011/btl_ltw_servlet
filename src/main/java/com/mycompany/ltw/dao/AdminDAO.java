@@ -21,11 +21,11 @@ public class AdminDAO {
             case "TOTAL_BOOKINGS":
                 sql = "SELECT COUNT(*) FROM booking";
                 break;
-            case "PENDING_BOOKINGS":
-                sql = "SELECT COUNT(*) FROM booking WHERE status='PENDING'";
-                break;
-            case "PAID_BOOKINGS":
+            case "PAID_BOOKINGS_COUNT":
                 sql = "SELECT COUNT(*) FROM booking WHERE status='PAID'";
+                break;
+            case "CHECKED_OUT_BOOKINGS":
+                sql = "SELECT COUNT(*) FROM booking WHERE status='CHECKED-OUT'";
                 break;
             default: return 0;
         }
@@ -43,7 +43,7 @@ public class AdminDAO {
     }
 
     public BigDecimal getTotalRevenue(String fromDate, String toDate) {
-        StringBuilder sql = new StringBuilder("SELECT SUM(total_amount) FROM booking WHERE status='PAID'");
+        StringBuilder sql = new StringBuilder("SELECT SUM(total_amount) FROM booking WHERE status IN ('PAID', 'CHECKED-IN', 'CHECKED-OUT')");
         List<Object> params = new ArrayList<>();
 
         if (fromDate != null && !fromDate.trim().isEmpty()) {
@@ -78,7 +78,7 @@ public class AdminDAO {
         List<Map<String, Object>> result = new ArrayList<>();
         // Query daily revenue
         String sql = "SELECT DATE(created_at) as dt, SUM(total_amount) as revenue " +
-                     "FROM booking WHERE status='PAID' " +
+                     "FROM booking WHERE status IN ('PAID', 'CHECKED-IN', 'CHECKED-OUT') " +
                      "GROUP BY DATE(created_at) " +
                      "ORDER BY dt ASC " +
                      "LIMIT 30"; // Up to 30 days
@@ -119,8 +119,8 @@ public class AdminDAO {
     public List<Map<String, Object>> getRoomPerformance(Long typeId) {
         List<Map<String, Object>> result = new ArrayList<>();
         String sql = "SELECT r.room_number, " +
-                     "COUNT(CASE WHEN b.status = 'PAID' THEN br.id ELSE NULL END) as booking_count, " +
-                     "SUM(CASE WHEN b.status = 'PAID' THEN rt.base_price * DATEDIFF(b.check_out, b.check_in) ELSE 0 END) as revenue " +
+                     "COUNT(CASE WHEN b.status IN ('PAID', 'CHECKED-IN', 'CHECKED-OUT') THEN br.id ELSE NULL END) as booking_count, " +
+                     "SUM(CASE WHEN b.status IN ('PAID', 'CHECKED-IN', 'CHECKED-OUT') THEN rt.base_price * DATEDIFF(b.check_out, b.check_in) ELSE 0 END) as revenue " +
                      "FROM room r " +
                      "JOIN room_type rt ON r.room_type_id = rt.id " +
                      "LEFT JOIN booking_room br ON r.id = br.room_id " +

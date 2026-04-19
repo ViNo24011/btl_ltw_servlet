@@ -197,9 +197,9 @@
             text-transform: uppercase;
         }
         
-        .status-badge.pending { background: #fef08a; color: #854d0e; }
-        .status-badge.confirmed { background: #bfdbfe; color: #1e3a8a; }
-        .status-badge.paid { background: #bbf7d0; color: #14532d; }
+        .status-badge.paid { background: #fef08a; color: #854d0e; }
+        .status-badge.checked-in { background: #bfdbfe; color: #1e3a8a; }
+        .status-badge.checked-out { background: #bbf7d0; color: #14532d; }
         .status-badge.cancelled { background: #fecaca; color: #7f1d1d; }
 
         .time-subtext {
@@ -251,10 +251,9 @@
             <div class="filter-item">
                 <label>🏷️ Status</label>
                 <select name="status">
-                    <option value="">Select status</option>
-                    <option value="PENDING" ${status == 'PENDING' ? 'selected' : ''}>PENDING</option>
-                    <option value="CONFIRMED" ${status == 'CONFIRMED' ? 'selected' : ''}>CONFIRMED</option>
                     <option value="PAID" ${status == 'PAID' ? 'selected' : ''}>PAID</option>
+                    <option value="CHECKED-IN" ${status == 'CHECKED-IN' ? 'selected' : ''}>CHECKED-IN</option>
+                    <option value="CHECKED-OUT" ${status == 'CHECKED-OUT' ? 'selected' : ''}>CHECKED-OUT</option>
                     <option value="CANCELLED" ${status == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
                 </select>
             </div>
@@ -319,9 +318,9 @@
                     <td><fmt:formatNumber value="${b.totalAmount}" type="number" groupingUsed="true" /> VND</td>
                     <td>
                         <c:choose>
-                            <c:when test="${b.status == 'PENDING'}"><span class="status-badge pending">${b.status}</span></c:when>
-                            <c:when test="${b.status == 'CONFIRMED'}"><span class="status-badge confirmed">${b.status}</span></c:when>
                             <c:when test="${b.status == 'PAID'}"><span class="status-badge paid">${b.status}</span></c:when>
+                            <c:when test="${b.status == 'CHECKED-IN'}"><span class="status-badge checked-in">${b.status}</span></c:when>
+                            <c:when test="${b.status == 'CHECKED-OUT'}"><span class="status-badge checked-out">${b.status}</span></c:when>
                             <c:when test="${b.status == 'CANCELLED'}"><span class="status-badge cancelled">${b.status}</span></c:when>
                             <c:otherwise><span class="status-badge">${b.status}</span></c:otherwise>
                         </c:choose>
@@ -338,9 +337,9 @@
                             <input type="hidden" name="toDate" value="${toDate}">
                             
                             <select name="newStatus" class="action-select" onchange="this.form.submit()">
-                                <option value="PENDING" ${b.status == 'PENDING' ? 'selected' : ''}>PENDING</option>
-                                <option value="CONFIRMED" ${b.status == 'CONFIRMED' ? 'selected' : ''}>CONFIRMED</option>
                                 <option value="PAID" ${b.status == 'PAID' ? 'selected' : ''}>PAID</option>
+                                <option value="CHECKED-IN" ${b.status == 'CHECKED-IN' ? 'selected' : ''}>CHECKED-IN</option>
+                                <option value="CHECKED-OUT" ${b.status == 'CHECKED-OUT' ? 'selected' : ''}>CHECKED-OUT</option>
                                 <option value="CANCELLED" ${b.status == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
                             </select>
                         </form>

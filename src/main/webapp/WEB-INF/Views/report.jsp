@@ -188,11 +188,11 @@
             <div class="metric-value">${totalBookings}</div>
         </div>
         <div class="metric-card" style="border-left: 6px solid #fef08a;">
-            <div class="metric-title">Pending Orders</div>
+            <div class="metric-title">Paid Orders (Pending check-in)</div>
             <div class="metric-value" style="color: #ca8a04;">${pendingBookings}</div>
         </div>
         <div class="metric-card" style="border-left: 6px solid #bbf7d0;">
-            <div class="metric-title">Completed (Paid)</div>
+            <div class="metric-title">Completed (Checked-Out)</div>
             <div class="metric-value" style="color: #16a34a;">${completedBookings}</div>
         </div>
     </div>
