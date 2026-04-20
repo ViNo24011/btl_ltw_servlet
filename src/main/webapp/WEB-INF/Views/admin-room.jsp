@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<!DOCTYPE html>
 <html>
 <head>
     <title>Admin - Room Management</title>
@@ -34,28 +33,79 @@
             color: white;
         }
 
-        .card-room img {
+        .card-room {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .card-room:hover {
+            transform: translateY(-5px);
+        }
+
+        .img-room {
             height: 180px;
             object-fit: cover;
+        }
+
+        .btn-roomtype {
+            background: linear-gradient(120deg, #a64d79, #8e3a64);
+            color: white;
+            border: none;
+        }
+
+        .btn-roomtype:hover {
+            opacity: 0.9;
+            color: white;
         }
     </style>
 </head>
 
 <body>
 
+<!-- NAVBAR -->
+<nav class="navbar navbar-light bg-light border-bottom">
+    <div class="container d-flex justify-content-between align-items-center">
+
+        <!-- ✅ CLICK VỀ HOME -->
+        <a class="navbar-brand"
+           href="${pageContext.request.contextPath}/home">
+            Admin Panel
+        </a>
+
+        <div class="d-flex align-items-center">
+
+            <c:if test="${not empty sessionScope.user}">
+                <span class="me-3 fw-bold">
+                    ${sessionScope.user.firstName}
+                </span>
+            </c:if>
+
+            
+            <a class="btn btn-custom me-2"
+               href="${pageContext.request.contextPath}/admin/room?action=new">
+                Add Room
+            </a>
+            <a class="btn btn-roomtype me-2"
+               href="${pageContext.request.contextPath}/home">
+                Quay lại
+            </a>
+
+            <c:if test="${not empty sessionScope.user}">
+                
+            </c:if>
+
+        </div>
+
+    </div>
+</nav>
+
 <div class="container mt-4">
 
-    <!-- TITLE + ADD -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="mb-3">
         <h2>Room Management (ADMIN)</h2>
-
-        <a href="${pageContext.request.contextPath}/admin/room?action=new"
-           class="btn btn-custom">
-            + Add Room
-        </a>
     </div>
 
-    <!-- ROOM LIST -->
     <div class="row">
 
         <c:forEach var="r" items="${rooms}">
@@ -63,9 +113,10 @@
 
                 <div class="card card-room">
 
-                    <!-- IMAGE -->
-                    <img class="card-img-top"
-                         src="${not empty r.photo ? r.photo : 'https://via.placeholder.com/300'}"/>
+                    <!-- ✅ FIX ẢNH CHUẨN -->
+                    <img class="card-img-top img-room"
+                         src="${not empty r.photo ? r.photo : 'https://via.placeholder.com/300'}"
+                         alt="Room Image"/>
 
                     <div class="card-body">
 
@@ -73,19 +124,14 @@
                             Room ${r.roomNumber}
                         </h5>
 
-                        <p>
-                            Type: ${r.roomType.name}
-                        </p>
+                        <p>Type: ${r.roomType.name}</p>
 
                         <p class="text-danger fw-bold">
                             ${r.roomType.basePrice} VND / night
                         </p>
 
-                        <p>
-                            Capacity: ${r.roomType.maxCapacity}
-                        </p>
+                        <p>Capacity: ${r.roomType.maxCapacity}</p>
 
-                        <!-- ACTION -->
                         <div class="d-flex justify-content-between">
 
                             <a class="btn btn-secondary btn-sm"
@@ -107,6 +153,7 @@
                         </div>
 
                     </div>
+
                 </div>
 
             </div>
