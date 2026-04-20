@@ -1,50 +1,43 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <!DOCTYPE html>
+
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Room Type - Proj Hotel</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+
         :root {
             --main-color: #a64d79;
             --hover-color: #8e3a64;
         }
-
         body {
             background-color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         .navbar-brand {
             color: var(--main-color) !important;
             font-weight: bold;
             font-size: 1.5rem;
         }
-
         .btn-custom {
             background-color: var(--main-color);
             color: white;
             border: none;
         }
-
         .btn-custom:hover {
             background-color: var(--hover-color);
             color: white;
         }
-
         .container-main {
             margin-top: 40px;
         }
-
         .card {
             border-radius: 10px;
         }
-
         footer {
             background-color: #212529;
             color: white;
@@ -107,12 +100,10 @@
                 </div>
             </div>
 
-            <!-- ✅ CHỈ 1 BUTTON -->
-            <button class="btn btn-custom">Thêm</button>
+            <button type="submit" class="btn btn-custom">Thêm</button>
 
         </form>
     </div>
-
     <!-- LIST -->
     <div class="card p-4 shadow-sm">
         <table class="table table-bordered">
@@ -123,7 +114,6 @@
                     <th>Hành động</th>
                 </tr>
             </thead>
-
             <tbody>
                 <c:forEach var="t" items="${types}">
                     <tr>
@@ -139,18 +129,13 @@
                     </tr>
                 </c:forEach>
             </tbody>
-
         </table>
     </div>
-
 </div>
-
 <!-- Footer -->
 <footer class="text-center">
     <p class="mb-0">© 2026 Proj Hotel</p>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
