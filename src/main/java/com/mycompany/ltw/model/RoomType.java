@@ -19,6 +19,7 @@ public class RoomType implements Serializable{
         this.maxCapacity = maxCapacity;
         this.description = description;
     }
+    
 
     // Getters and Setters
     public Long getId() { return id; }
