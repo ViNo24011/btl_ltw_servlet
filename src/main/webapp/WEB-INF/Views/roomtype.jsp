@@ -14,30 +14,37 @@
             --main-color: #a64d79;
             --hover-color: #8e3a64;
         }
+
         body {
             background-color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         .navbar-brand {
             color: var(--main-color) !important;
             font-weight: bold;
             font-size: 1.5rem;
         }
+
         .btn-custom {
             background-color: var(--main-color);
             color: white;
             border: none;
         }
+
         .btn-custom:hover {
             background-color: var(--hover-color);
             color: white;
         }
+
         .container-main {
             margin-top: 40px;
         }
+
         .card {
             border-radius: 10px;
         }
+
         footer {
             background-color: #212529;
             color: white;
@@ -100,7 +107,8 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-custom">Thêm</button>
+            <!-- ✅ CHỈ 1 BUTTON -->
+            <button class="btn btn-custom">Thêm</button>
 
         </form>
     </div>
