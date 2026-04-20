@@ -74,15 +74,54 @@ input {
     border: 1px solid #d1d5db;
 }
 
-button {
+/* BUTTON GROUP */
+.btn-group {
     margin-top: 10px;
-    padding: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.add-btn, .back-btn {
+    padding: 10px 16px;
     border-radius: 10px;
     border: none;
     font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ADD */
+.add-btn {
     background: linear-gradient(120deg,var(--accent),var(--accent-strong));
     color: #fff;
+}
+
+/* BACK */
+.btn {
+    padding: 10px 16px;
+    border-radius: 10px; /* bo góc */
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
     cursor: pointer;
+    transition: 0.25s;
+}
+
+/* màu secondary (xám đẹp) */
+.btn-secondary {
+    background: linear-gradient(120deg, #6b7280, #4b5563);
+    color: #fff;
+}
+
+/* hover effect */
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
 }
 
 /* LIST */
@@ -164,7 +203,6 @@ button {
 
 <div class="page">
 
-    <!-- HEADER -->
     <div class="topbar">
         <div class="brand"><span>Admin</span> Room Types</div>
     </div>
@@ -173,16 +211,23 @@ button {
     <div class="form-card">
         <h3>Add Room Type</h3>
 
-        <form method="post" action="roomtype">
+        <form method="post" action="${pageContext.request.contextPath}/roomtype">
             <div class="form-grid">
-                <input name="name" placeholder="Room type name">
-                <input name="price" placeholder="Price">
-
-                <input name="capacity" placeholder="Capacity">
+                <input name="name" placeholder="Room type name" required>
+                <input name="price" placeholder="Price" required>
+                <input name="capacity" placeholder="Capacity" required>
                 <input name="description" placeholder="Description">
             </div>
 
-            <button>Add</button>
+            <div class="btn-group">
+                <button type="submit" class="add-btn">Add</button>
+
+                <!-- BACK FIXED -->
+                <a href="${pageContext.request.contextPath}/admin/room"
+               class="btn btn-secondary">
+                Quay lại
+            </a>
+            </div>
         </form>
     </div>
 
@@ -190,7 +235,6 @@ button {
     <div class="section-title">All Room Types</div>
 
     <div class="grid">
-
         <c:forEach var="t" items="${types}">
             <div class="card">
 
@@ -208,7 +252,7 @@ button {
                     ${t.description}
                 </div>
 
-                <a href="roomtype?action=delete&id=${t.id}"
+                <a href="${pageContext.request.contextPath}/roomtype?action=delete&id=${t.id}"
                    onclick="return confirm('Delete this type?')"
                    class="delete-btn">
                     Delete
@@ -216,7 +260,6 @@ button {
 
             </div>
         </c:forEach>
-
     </div>
 
     <div class="footer">© 2026 LakeSide Hotel</div>
