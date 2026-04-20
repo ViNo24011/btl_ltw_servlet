@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -28,7 +29,6 @@ body {
     margin: 24px auto;
 }
 
-/* HEADER */
 .topbar {
     background: #fff;
     border-radius: 20px;
@@ -46,6 +46,27 @@ body {
 }
 
 .brand span { color: var(--accent); }
+
+/* ALERT */
+.alert-success {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #dcfce7;
+    color: #166534;
+    font-weight: 700;
+    text-align: center;
+}
+
+.alert-error {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #fee2e2;
+    color: #991b1b;
+    font-weight: 700;
+    text-align: center;
+}
 
 /* FORM */
 .form-card {
@@ -74,54 +95,32 @@ input {
     border: 1px solid #d1d5db;
 }
 
-/* BUTTON GROUP */
 .btn-group {
     margin-top: 10px;
     display: flex;
     gap: 10px;
 }
 
-.add-btn, .back-btn {
+.add-btn {
     padding: 10px 16px;
     border-radius: 10px;
     border: none;
     font-weight: 700;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* ADD */
-.add-btn {
     background: linear-gradient(120deg,var(--accent),var(--accent-strong));
     color: #fff;
 }
 
-/* BACK */
 .btn {
     padding: 10px 16px;
-    border-radius: 10px; /* bo góc */
+    border-radius: 10px;
     font-weight: 700;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: none;
-    cursor: pointer;
-    transition: 0.25s;
-}
-
-/* màu secondary (xám đẹp) */
-.btn-secondary {
     background: linear-gradient(120deg, #6b7280, #4b5563);
     color: #fff;
-}
-
-/* hover effect */
-.btn-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
 }
 
 /* LIST */
@@ -167,19 +166,25 @@ input {
     color: #64748b;
 }
 
-.delete-btn {
+.action-btn {
     margin-top: 10px;
     display: inline-block;
     padding: 6px 10px;
     border-radius: 8px;
-    background: #ef4444;
     color: #fff;
     text-decoration: none;
     font-size: 0.8rem;
     font-weight: 700;
 }
 
-/* FOOTER */
+.edit-btn {
+    background: #3b82f6;
+}
+
+.delete-btn {
+    background: #ef4444;
+}
+
 .footer {
     margin-top: 30px;
     text-align: center;
@@ -187,7 +192,6 @@ input {
     font-weight: 600;
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr 1fr; }
 }
@@ -197,72 +201,89 @@ input {
     .form-grid { grid-template-columns: 1fr; }
 }
 </style>
+
 </head>
 
 <body>
 
 <div class="page">
 
-    <div class="topbar">
-        <div class="brand"><span>Admin</span> Room Types</div>
-    </div>
+```
+<div class="topbar">
+    <div class="brand"><span>Admin</span> Room Types</div>
+</div>
 
-    <!-- FORM -->
-    <div class="form-card">
-        <h3>Add Room Type</h3>
+<!-- SUCCESS -->
+<c:if test="${not empty sessionScope.msg}">
+    <div class="alert-success">${sessionScope.msg}</div>
+    <c:remove var="msg" scope="session"/>
+</c:if>
 
-        <form method="post" action="${pageContext.request.contextPath}/roomtype">
-            <div class="form-grid">
-                <input name="name" placeholder="Room type name" required>
-                <input name="price" placeholder="Price" required>
-                <input name="capacity" placeholder="Capacity" required>
-                <input name="description" placeholder="Description">
-            </div>
+<!-- ERROR -->
+<c:if test="${not empty error}">
+    <div class="alert-error">${error}</div>
+</c:if>
 
-            <div class="btn-group">
-                <button type="submit" class="add-btn">Add</button>
+<!-- FORM -->
+<div class="form-card">
+    <h3>${type == null ? "Add Room Type" : "Edit Room Type"}</h3>
 
-                <!-- BACK FIXED -->
-                <a href="${pageContext.request.contextPath}/admin/room"
-               class="btn btn-secondary">
+    <form method="post" action="${pageContext.request.contextPath}/roomtype">
+
+        <input type="hidden" name="id" value="${type.id}">
+
+        <div class="form-grid">
+            <input name="name" value="${type.name}" placeholder="Room type name" required>
+            <input name="price" value="${type.basePrice}" placeholder="Price" required>
+            <input name="capacity" value="${type.maxCapacity}" placeholder="Capacity" required>
+            <input name="description" value="${type.description}" placeholder="Description">
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="add-btn">
+                ${type == null ? "Add" : "Update"}
+            </button>
+
+            <a href="${pageContext.request.contextPath}/home" class="btn">
                 Quay lại
             </a>
-            </div>
-        </form>
-    </div>
+        </div>
 
-    <!-- LIST -->
-    <div class="section-title">All Room Types</div>
+    </form>
+</div>
 
-    <div class="grid">
-        <c:forEach var="t" items="${types}">
-            <div class="card">
+<!-- LIST -->
+<div class="section-title">All Room Types</div>
 
-                <h4>${t.name}</h4>
+<div class="grid">
+    <c:forEach var="t" items="${roomTypes}">
+        <div class="card">
 
-                <div class="price">
-                    ${t.basePrice} VND
-                </div>
+            <h4>${t.name}</h4>
 
-                <div class="meta">
-                    Capacity: ${t.maxCapacity} people
-                </div>
+            <div class="price">${t.basePrice} VND</div>
 
-                <div class="meta">
-                    ${t.description}
-                </div>
+            <div class="meta">Capacity: ${t.maxCapacity} people</div>
 
-                <a href="${pageContext.request.contextPath}/roomtype?action=delete&id=${t.id}"
-                   onclick="return confirm('Delete this type?')"
-                   class="delete-btn">
-                    Delete
-                </a>
+            <div class="meta">${t.description}</div>
 
-            </div>
-        </c:forEach>
-    </div>
+            <a href="${pageContext.request.contextPath}/roomtype?action=edit&id=${t.id}"
+               class="action-btn edit-btn">
+                Edit
+            </a>
 
-    <div class="footer">© 2026 LakeSide Hotel</div>
+            <a href="${pageContext.request.contextPath}/roomtype?action=delete&id=${t.id}"
+               onclick="return confirm('Delete this type?')"
+               class="action-btn delete-btn">
+                Delete
+            </a>
+
+        </div>
+    </c:forEach>
+</div>
+
+<div class="footer">© 2026 LakeSide Hotel</div>
+```
 
 </div>
 
