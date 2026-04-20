@@ -60,10 +60,7 @@
                     ${sessionScope.user.firstName}
                 </span>
 
-                <a class="btn btn-danger btn-sm"
-                   href="${pageContext.request.contextPath}/logout">
-                    Logout
-                </a>
+                
             </c:if>
         </div>
 
