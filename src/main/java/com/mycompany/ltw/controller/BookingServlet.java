@@ -45,13 +45,16 @@ public class BookingServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //tieng viet
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        
         bookingDAO = new BookingDAO();
         String url = "/WEB-INF/Views/booking.jsp";
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
 
         if ("removeRoomByNumber".equals(action)) {
-            persistInput(request);
             String roomNumber = request.getParameter("roomNumber");
             List<Room> selectedRooms = (List<Room>) session.getAttribute("selectedRooms");
             List<Room> selectedMultipleRooms = (List<Room>) session.getAttribute("selectedMultipleRooms");
@@ -67,10 +70,11 @@ public class BookingServlet extends HttpServlet {
             return;
         } else if (action.equals("getVouchers")) {
             url = "/WEB-INF/Views/booking.jsp";
-            persistInput(request);
             String code = request.getParameter("voucherCode");
-            if (code.isEmpty()) {
+            if (code == null || code.trim().isEmpty()) {
                 request.setAttribute("voucherMessage", "Invalid voucher");
+                getServletContext().getRequestDispatcher(url).forward(request, response);
+                return;
             }
             Voucher voucher = bookingDAO.getVoucherByCode(code);
             if (voucher == null) {
@@ -130,12 +134,12 @@ public class BookingServlet extends HttpServlet {
             if (user != null) {
                 booking.setUserId(user.getId());
             }
-            persistInput(request);
+           
             // Check date
             LocalDate checkIn = LocalDate.parse(request.getParameter("checkIn"));
             LocalDate checkOut = LocalDate.parse(request.getParameter("checkOut"));
             LocalDate today = LocalDate.now();
-
+            persistInput(request);
             if (checkIn.isAfter(checkOut)) {
                 request.setAttribute("bookingMessage", "Check in date must be before check out date.");
                 getServletContext().getRequestDispatcher(url).forward(request, response);
@@ -281,14 +285,16 @@ public class BookingServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
         session.removeAttribute("voucher");
         User user = (User) session.getAttribute("user");
         if(user!=null){
-            request.setAttribute("firstName", user.getFirstName());
-            request.setAttribute("lastName", user.getLastName());
-            request.setAttribute("guestEmail", user.getEmail());
+            session.setAttribute("firstName", user.getFirstName());
+            session.setAttribute("lastName", user.getLastName());
+            session.setAttribute("guestEmail", user.getEmail());
         }
         
 
@@ -340,10 +346,19 @@ public class BookingServlet extends HttpServlet {
         return calcultedTotaAmount;
     }
     public void persistInput(HttpServletRequest request){
-        request.setAttribute("checkIn", request.getParameter("checkIn"));
-        request.setAttribute("checkOut", request.getParameter("checkOut"));
-        request.setAttribute("firstName", request.getParameter("firstName"));
-        request.setAttribute("lastName", request.getParameter("lastName"));
-        request.setAttribute("guestEmail", request.getParameter("guestEmail"));
+        HttpSession session=request.getSession();
+        session.setAttribute("checkIn", request.getParameter("checkIn"));
+        session.setAttribute("checkOut", request.getParameter("checkOut"));
+        session.setAttribute("firstName", request.getParameter("firstName"));
+        session.setAttribute("lastName", request.getParameter("lastName"));
+        session.setAttribute("guestEmail", request.getParameter("guestEmail"));
+    }
+    public void clearSession(HttpServletRequest request){
+        HttpSession session=request.getSession();
+        session.removeAttribute("checkIn");
+        session.removeAttribute("checkOut");
+        session.removeAttribute("firstName");
+        session.removeAttribute("lastName");
+        session.removeAttribute("guestEmail");
     }
 }

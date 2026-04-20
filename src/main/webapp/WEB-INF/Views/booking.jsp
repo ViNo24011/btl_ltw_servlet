@@ -314,7 +314,7 @@
             border: none;
             padding: 8px 16px;
             display: block;
-            margin: 10px;
+            margin: 15px auto 0;
             cursor: pointer;
         }
 
@@ -377,12 +377,6 @@
             margin: 10px 0;
             text-align: center;
         }
-        .form-group-voucher{
-            display: grid;
-            grid-template-columns: 120px auto auto auto;
-            align-items: center;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -418,91 +412,90 @@
         <!-- voucher -->
         <label class="brand"><strong>Booking</strong></label>
         <form class="form-box" action="booking" method="post">
+            <input type="hidden" name="action" value="getVouchers">
+            
+            <div class="form-group">
+                <label>Voucher:</label>
+                <input type="text" name="voucherCode" placeholder="Enter voucher code" required>
+            </div>
+            <c:if test="${not empty voucherMessage}">
+                <span class="error-message">${voucherMessage}</span>
+            </c:if>
+            <button type="submit">Apply Voucher</button>
+            
+        </form>
+        <c:if test="${not empty voucher}">
+            <div class="voucher-tabe-container">
+                <table>
+                    <tr>
+                        <td><strong>Voucher Code</strong></td>
+                        <td><strong>Expiry Date</strong></td>
+                        <td><strong>Value</strong></td>   
+                    </tr>
+                    <tr>
+                        <td>${voucher.code}</td>
+                        <td>${voucher.expiryDate}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${voucher.isIsPercent()}">
+                                    ${voucher.discountValue}%
+                                </c:when>
+                                <c:otherwise>
+                                    ${voucher.discountValue}
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                    </tr>
+                </table>
+            
 
-            <!-- bookingType -->
+                <form action="booking" method="post">
+                    <input type="hidden" name="action" value="removeVoucher">
+                    <button type="submit" style="background-color: gray;">Remove Voucher</button>
+                </form>
+            </div>
+        </c:if>
+        <!-- Booking -->
+        <form class="form-box" action="booking" method="post">
+            <input type="hidden" name="action" value="createBooking">
             <input type="hidden" name="bookingType" value="${bookingType}">
-
-            <!-- ========== BOOKING INFO ========== -->
             <div class="form-group">
                 <label>Check in date:</label>
-                <input type="date" name="checkIn" value="${checkIn}" required>
+                <input type="date" name="checkIn" value="${sessionScope.checkIn}" required>
             </div>
-
             <div class="form-group">
                 <label>Check out date:</label>
-                <input type="date" name="checkOut" value="${checkOut}" required>
+                <input type="date" name="checkOut" value="${sessionScope.checkOut}" required>
             </div>
-
             <div class="form-group">
                 <label>First Name:</label>
-                <input name="firstName" value="${firstName}" required>
+                <input name="firstName" value="${sessionScope.firstName}" ${not empty sessionScope.user ? "readonly" : ""} required>
             </div>
 
             <div class="form-group">
                 <label>Last Name:</label>
-                <input name="lastName" value="${lastName}" required>
+                <input name="lastName" value="${sessionScope.lastName}" ${not empty sessionScope.user ? "readonly" : ""} required>
             </div>
 
             <div class="form-group">
                 <label>Email:</label>
-                <input name="guestEmail" value="${guestEmail}" required>
+                <input name="guestEmail" value="${sessionScope.guestEmail}" ${not empty sessionScope.user ? "readonly" : ""} required>
             </div>
-            
-            <div class="form-box">
-                 <!-- ========== VOUCHER ========== -->
-                <div class="form-group-voucher">
-                    <label>Voucher:</label>
-                    <input type="text" name="voucherCode" placeholder="Enter voucher code">
-                    <button type="submit" name="action" value="getVouchers">Apply Voucher</button>
-                    <button type="submit" name="action" value="removeVoucher" style="background-color: gray;">
-                        Remove Voucher
-                    </button>
-                </div>
-                <c:if test="${not empty voucherMessage}">
-                    <span class="error-message">${voucherMessage}</span>
-                </c:if>
-                <c:if test="${not empty voucher}">
-                        <table>
-                            <tr>
-                                <td><strong>Voucher Code</strong></td>
-                                <td><strong>Expiry Date</strong></td>
-                                <td><strong>Value</strong></td>
-                            </tr>
-                            <tr>
-                                <td>${voucher.code}</td>
-                                <td>${voucher.expiryDate}</td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${voucher.isIsPercent()}">
-                                            ${voucher.discountValue}%
-                                        </c:when>
-                                        <c:otherwise>
-                                            ${voucher.discountValue}
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                            </tr>
-                        </table>
 
-                        
-                   
-                </c:if>
-            </div>
-            <!-- nút apply voucher -->
-            
 
-            <!-- hiển thị voucher -->
-            
 
-            <!-- ========== ROOM TABLE ========== -->
+            <c:if test="${not empty bookingMessage}">
+                <span class="error-message">${bookingMessage}</span>
+            </c:if>
+
             <div class="table-container">
                 <table>
                     <tr>
-                        <th>Room</th>
-                        <th>Adults</th>
-                        <th>Children</th>
-                        <th>Capacity</th>
-                        <th>Type</th>
+                        <th>Selected rooms</th>
+                        <th>Number of adults</th>
+                        <th>Number of children</th>
+                        <th>Max capacity</th>
+                        <th>Room type</th>
                         <th>Price</th>
                         <th>Status</th>
                     </tr>
@@ -521,37 +514,29 @@
                             <td>${room.roomType.basePrice}</td>
                             <td>
                                 <c:if test="${not empty roomErrors[room.id]}">
-                                    <span class="error-message">${roomErrors[room.id]}</span>
+                                    <span class="error-message">
+                                        ${roomErrors[room.id]}
+                                    </span>
                                 </c:if>
                             </td>
                         </tr>
                     </c:forEach>
                 </table>
             </div>
-
-            <!-- ========== REMOVE ROOM ========== -->
-            <div style="margin-top: 10px;">
-                <label>Enter room number to remove:</label>
-                <input type="text" name="roomNumber">
-                <button type="submit" name="action" value="removeRoomByNumber">
-                    Remove
+                <div style="display:flex; gap:50px; justify-content:center; align-items:center; margin-top:15px;">
+                <button type="button" style="margin:0;" onclick="history.back()">
+                    Back
+                </button>
+                <button type="submit" style="margin:0;">
+                    Proceed payment
                 </button>
             </div>
-
-            <!-- ========== ERROR ========== -->
-            <c:if test="${not empty bookingMessage}">
-                <span class="error-message">${bookingMessage}</span>
-            </c:if>
-
-            <!-- ========== ACTION BUTTONS ========== -->
-            <div style="display:flex; gap:50px; justify-content:center; margin-top:15px;">
-                <button type="button" onclick="history.back()">Back</button>
-
-                <button type="submit" name="action" value="createBooking">
-                    Proceed Payment
-                </button>
-            </div>
-
+        </form>
+        <form action="booking" method="post" style="display:flex; gap:10px; align-items:center; margin-top: 10px;">
+            <label>Enter room number to remove:</label>
+            <input type="text" name="roomNumber">
+            <input type="hidden" name="action" value="removeRoomByNumber">
+            <button type="submit" style="display:inline; margin:0;">Remove</button>
         </form>
     </div>
 </main>
