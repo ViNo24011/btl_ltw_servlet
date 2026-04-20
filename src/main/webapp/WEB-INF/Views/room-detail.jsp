@@ -1,146 +1,222 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Room Detail</title>
+    <meta charset="UTF-8">
+    <title>Room Detail | LakeSide Hotel</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --main-color: #a64d79;
-            --hover-color: #8e3a64;
+            --accent: #a64d79;
+            --accent-strong: #8e3a64;
+            --border: #e5e7eb;
+            --bg: linear-gradient(135deg,#dbeafe,#eef2ff,#ecfeff);
         }
 
         body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background: var(--bg);
         }
 
-        .navbar-brand {
-            color: var(--main-color) !important;
-            font-weight: bold;
+        .page {
+            width: min(1180px, 94%);
+            margin: 24px auto;
         }
 
-        .btn-custom {
-            background-color: var(--main-color);
-            color: white;
+        /* HEADER */
+        .topbar {
+            background: #fff;
+            border-radius: 20px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
 
-        .btn-custom:hover {
-            background-color: var(--hover-color);
-            color: white;
+        .brand {
+            font-family: "Sora";
+            font-size: 1.8rem;
+            font-weight: 700;
         }
 
-        .room-img {
+        .brand span { color: var(--accent); }
+
+        .menu a {
+            text-decoration: none;
+            margin-left: 10px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #111;
+        }
+
+        /* MAIN LAYOUT */
+        .detail-grid {
+            margin-top: 24px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        /* IMAGE */
+        .image-box img {
             width: 100%;
-            height: 400px;
+            height: 420px;
             object-fit: cover;
-            border-radius: 12px;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
         }
 
-        .room-box {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        /* INFO CARD */
+        .info-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .info-box h2 {
+            margin: 0;
+            color: var(--accent);
         }
 
         .price {
-            color: #e91e63;
-            font-size: 24px;
-            font-weight: bold;
+            margin: 10px 0;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #b45309;
+        }
+
+        .meta {
+            color: #475569;
+            margin: 6px 0;
+        }
+
+        .desc {
+            margin-top: 12px;
+            line-height: 1.6;
+            color: #334155;
+        }
+
+        .btn-book {
+            margin-top: 16px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            background: linear-gradient(120deg,var(--accent),var(--accent-strong));
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btn-book:hover {
+            opacity: 0.9;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* MOBILE */
+        @media (max-width: 900px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .image-box img {
+                height: 260px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-    <div class="container">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/home">Proj Hotel</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/room">Back to rooms</a>
-                </li>
-                <c:if test="${not empty sessionScope.user}">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="usermenu" role="button" data-bs-toggle="dropdown">
-                            ${sessionScope.user.firstName}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Profile</a></li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/vouchers">Vouchers</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
-                        </ul>
-                    </li>
-                </c:if>
-                <c:if test="${empty sessionScope.user}">
-                    <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/login">Login</a>
-                    </li>
-                </c:if>
-            </ul>
+<div class="page">
+
+    <!-- HEADER -->
+    <div class="topbar">
+        <div class="brand"><span>lake</span>Side Hotel</div>
+
+        <div class="menu">
+            <a href="${pageContext.request.contextPath}/home">Home</a>
+            <a href="${pageContext.request.contextPath}/room">Rooms</a>
+
+            <c:choose>
+                <c:when test="${not empty sessionScope.user}">
+                    <a href="${pageContext.request.contextPath}/profile">
+                        ${sessionScope.user.firstName}
+                    </a>
+                    <a href="${pageContext.request.contextPath}/logout">Logout</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${pageContext.request.contextPath}/login">Login</a>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
-</nav>
 
-<!-- CONTENT -->
-<div class="container mt-4">
-
-    <div class="row">
+    <!-- CONTENT -->
+    <div class="detail-grid">
 
         <!-- IMAGE -->
-        <div class="col-md-7">
-            <img class="room-img"
-                 src="${pageContext.request.contextPath}/images/default-room.jpg"/>
+        <div class="image-box">
+
+            <c:set var="imgIndex" value="${(room.id % 6) + 1}" />
+
+            <img src="${room.photo != null 
+                ? room.photo 
+                : pageContext.request.contextPath.concat('/images/room').concat(imgIndex).concat('.jpg')}" />
+
         </div>
 
         <!-- INFO -->
-        <div class="col-md-5">
+        <div class="info-box">
 
-            <div class="room-box">
+            <h2>Room ${room.roomNumber}</h2>
 
-                <h2>Room ${room.roomNumber}</h2>
-
-                <p>Type: ${room.roomType.name}</p>
-
-                <p class="price">
-                    ${room.roomType.basePrice} VND / night
-                </p>
-
-                <p>
-                    Capacity: ${room.roomType.maxCapacity} people
-                </p>
-
-                <hr/>
-
-                <p>
-                    ${room.roomType.description}
-                </p>
-
-                <form action="booking" method="post">
-                    <input type="hidden" name="action" value="bookOneRoom">
-                    <input type="hidden" name="roomId" value="${room.id}">
-                    <input type="hidden" name="bookingType" value="one">
-                    <button type="submit" class="btn btn-custom w-100 mt-3">Book this room</button>
-                </form>
-
+            <div class="price">
+                ${room.roomType.basePrice} VND / night
             </div>
+
+            <div class="meta">
+                Type: ${room.roomType.name}
+            </div>
+
+            <div class="meta">
+                Capacity: ${room.roomType.maxCapacity} people
+            </div>
+
+            <div class="desc">
+                ${room.roomType.description}
+            </div>
+
+            <a href="${pageContext.request.contextPath}/booking?action=create&roomId=${room.id}">
+                <button class="btn-book">
+                    Book this room
+                </button>
+            </a>
 
         </div>
 
     </div>
 
+    <div class="footer">© 2026 LakeSide Hotel</div>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
