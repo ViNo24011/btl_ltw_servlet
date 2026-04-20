@@ -450,9 +450,21 @@
 
     <!-- ADMIN MENU -->
     <c:if test="${isAdmin}">
-        <a href="${pageContext.request.contextPath}/roomtype">Manage RoomType</a>
-        <a href="${pageContext.request.contextPath}/admin/voucher">Manage Voucher</a>
-        <a href="${pageContext.request.contextPath}/admin/booking">Manage Booking</a>
+        <a href="${pageContext.request.contextPath}/roomtype?action=list">
+            Manage Room Type
+        </a>
+
+        <a href="${pageContext.request.contextPath}/room?action=list">
+            Manage Room
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/voucher">
+            Manage Voucher
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/booking">
+            Manage Booking
+        </a>
     </c:if>
 
     <!-- USER -->
