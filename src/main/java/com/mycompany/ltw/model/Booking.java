@@ -7,9 +7,11 @@ import java.time.LocalDateTime;
 public class Booking {
     private Long id;
     private Long userId;
+    private Long voucherId;
     private LocalDate checkIn;
     private LocalDate checkOut;
     private String guestName;
+    private String guestEmail;
     private int totalGuests;
     private String confirmationCode;
     private BigDecimal totalAmount;
@@ -17,10 +19,8 @@ public class Booking {
     private LocalDateTime createdAt;
 
     public Booking() {}
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    
+    
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
     public LocalDate getCheckIn() { return checkIn; }
@@ -39,4 +39,24 @@ public class Booking {
     public void setStatus(String status) { this.status = status; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public Long getVoucherId() {
+        return voucherId;
+    }
+
+    public void setVoucherId(Long voucherId) {
+        this.voucherId = voucherId;
+    }
+    public String getGuestEmail() { return guestEmail; }
+
+    // Getters and Setters
+    public void setGuestEmail(String guestEmail) {
+        this.guestEmail = guestEmail;
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) { this.id = id; }
+    
 }
