@@ -1,137 +1,227 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Room Type - Proj Hotel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Room Types | Admin</title>
 
-    <style>
-        :root {
-            --main-color: #a64d79;
-            --hover-color: #8e3a64;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
 
-        body {
-            background-color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<style>
+:root {
+    --accent: #a64d79;
+    --accent-strong: #8e3a64;
+    --border: #e5e7eb;
+    --bg: linear-gradient(135deg,#dbeafe,#eef2ff,#ecfeff);
+}
 
-        .navbar-brand {
-            color: var(--main-color) !important;
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
+body {
+    margin: 0;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    background: var(--bg);
+}
 
-        .btn-custom {
-            background-color: var(--main-color);
-            color: white;
-            border: none;
-        }
+.page {
+    width: min(1100px, 94%);
+    margin: 24px auto;
+}
 
-        .btn-custom:hover {
-            background-color: var(--hover-color);
-            color: white;
-        }
+/* HEADER */
+.topbar {
+    background: #fff;
+    border-radius: 20px;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
 
-        .container-main {
-            margin-top: 40px;
-        }
+.brand {
+    font-family: "Sora";
+    font-size: 1.6rem;
+    font-weight: 700;
+}
 
-        .card {
-            border-radius: 10px;
-        }
+.brand span { color: var(--accent); }
 
-        footer {
-            background-color: #212529;
-            color: white;
-            padding: 15px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
+/* FORM */
+.form-card {
+    margin-top: 20px;
+    background: #fff;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.form-card h3 {
+    margin-top: 0;
+    color: var(--accent);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+input {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    background: linear-gradient(120deg,var(--accent),var(--accent-strong));
+    color: #fff;
+    cursor: pointer;
+}
+
+/* LIST */
+.section-title {
+    margin-top: 24px;
+    font-weight: 700;
+    color: var(--accent-strong);
+}
+
+.grid {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 14px;
+    transition: 0.25s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+}
+
+.card h4 {
+    margin: 0;
+    color: var(--accent);
+}
+
+.price {
+    margin: 6px 0;
+    font-weight: 800;
+    color: #b45309;
+}
+
+.meta {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.delete-btn {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #ef4444;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* FOOTER */
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #64748b;
+    font-weight: 600;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-    <div class="container">
-        <a class="navbar-brand" href="index">Proj Hotel</a>
+<div class="page">
 
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="room">Browse all rooms</a>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="find-booking">Find my booking</a></li>
-                <li class="nav-item"><a class="nav-link" href="login">Login</a></li>
-            </ul>
-        </div>
+    <!-- HEADER -->
+    <div class="topbar">
+        <div class="brand"><span>Admin</span> Room Types</div>
     </div>
-</nav>
 
-<!-- Content -->
-<div class="container container-main">
-
-    <h2 class="mb-4">Room Types</h2>
-
-    <!-- Form -->
-    <div class="card p-4 mb-4 shadow-sm">
-        <h5 class="mb-3">Add Room Type</h5>
+    <!-- FORM -->
+    <div class="form-card">
+        <h3>Add Room Type</h3>
 
         <form method="post" action="roomtype">
-            <div class="row mb-3">
-                <div class="col">
-                    <input name="name" class="form-control" placeholder="Tên">
-                </div>
-                <div class="col">
-                    <input name="price" class="form-control" placeholder="Giá">
-                </div>
+            <div class="form-grid">
+                <input name="name" placeholder="Room type name">
+                <input name="price" placeholder="Price">
+
+                <input name="capacity" placeholder="Capacity">
+                <input name="description" placeholder="Description">
             </div>
 
-            <div class="row mb-3">
-                <div class="col">
-                    <input name="capacity" class="form-control" placeholder="Sức chứa">
-                </div>
-                <div class="col">
-                    <input name="description" class="form-control" placeholder="Mô tả">
-                </div>
-            </div>
-
-            <button class="btn btn-custom">Thêm</button>
+            <button>Add</button>
         </form>
     </div>
 
- 
-                <c:forEach var="t" items="${types}">
-                    <tr>
-                        <td>${t.name}</td>
-                        <td>${t.basePrice}</td>
-                        <td>
-                            <a href="roomtype?action=delete&id=${t.id}" 
-                               class="btn btn-danger btn-sm">
-                               Xóa
-                            </a>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+    <!-- LIST -->
+    <div class="section-title">All Room Types</div>
+
+    <div class="grid">
+
+        <c:forEach var="t" items="${types}">
+            <div class="card">
+
+                <h4>${t.name}</h4>
+
+                <div class="price">
+                    ${t.basePrice} VND
+                </div>
+
+                <div class="meta">
+                    Capacity: ${t.maxCapacity} people
+                </div>
+
+                <div class="meta">
+                    ${t.description}
+                </div>
+
+                <a href="roomtype?action=delete&id=${t.id}"
+                   onclick="return confirm('Delete this type?')"
+                   class="delete-btn">
+                    Delete
+                </a>
+
+            </div>
+        </c:forEach>
+
     </div>
 
+    <div class="footer">© 2026 LakeSide Hotel</div>
+
 </div>
-
-<!-- Footer -->
-<footer class="text-center">
-    <p class="mb-0">© 2026 Proj Hotel</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
