@@ -257,6 +257,16 @@
             .hidden-table-border{
                 border: hidden;
             }
+            button {
+                background-color: #a64d79;
+                color: white;
+                border-radius: 4px;
+                border: none;
+                padding: 8px 16px;
+                display: block;
+                margin: 15px auto 0;
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
