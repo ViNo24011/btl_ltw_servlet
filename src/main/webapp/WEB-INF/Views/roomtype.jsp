@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-custom">Thêm</button>
+            <button type="submit" class="btn btn-custom">Thêm</button>
 
         </form>
     </div>
@@ -138,6 +138,7 @@
                     </tr>
                 </c:forEach>
             </tbody>
+
         </table>
     </div>
 
