@@ -236,9 +236,14 @@
                             Detail
                         </a>
 
-                        <a href="${pageContext.request.contextPath}/booking?action=create&roomId=${r.id}" class="btn book">
-                            Book
-                        </a>
+                        <form action="room" method="post" class="m-0 p-0">
+                            <input type="hidden" name="action" value="bookRooms">
+                            <input type="hidden" name="roomId" value="${r.id}">
+                            <input type="hidden" name="currentPage" value="${currentPage}">
+                            <button type="submit" class="btn btn-custom btn-sm">
+                               Book
+                            </button>
+                        </form>                    
                     </div>
                 </div>
 

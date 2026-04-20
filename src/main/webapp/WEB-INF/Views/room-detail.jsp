@@ -204,11 +204,12 @@
                 ${room.roomType.description}
             </div>
 
-            <a href="${pageContext.request.contextPath}/booking?action=create&roomId=${room.id}">
-                <button class="btn-book">
-                    Book this room
-                </button>
-            </a>
+            <form action="booking" method="get">
+                <input type="hidden" name="roomId" value="${room.id}">
+                <input type="hidden" name="bookingType" value="one">                    
+                <button type="submit" class="btn-book">Book this room</button>
+            </form>
+                
 
         </div>
 

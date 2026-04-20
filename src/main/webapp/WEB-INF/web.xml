@@ -106,5 +106,9 @@
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/admin/users/delete</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserServlet</servlet-name>
+        <url-pattern>/booking-history</url-pattern>
+    </servlet-mapping>
 
 </web-app>

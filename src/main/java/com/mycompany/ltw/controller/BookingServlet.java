@@ -50,38 +50,24 @@ public class BookingServlet extends HttpServlet {
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
 
-        if (action.equals("bookOneRoom")) {
-            session.removeAttribute("voucher");
-            long roomId = Long.parseLong(request.getParameter("roomId"));
-            RoomDAO roomDAO = new RoomDAO();
-            Room room = roomDAO.getById(roomId);
-            List<Room> selectedRooms = new ArrayList<>();
-            selectedRooms.add(room);
-            session.setAttribute("selectedRooms", selectedRooms);
-        }
-
-        else if ("removeRoomByNumber".equals(action)) {
-
+        if ("removeRoomByNumber".equals(action)) {
+            persistInput(request);
             String roomNumber = request.getParameter("roomNumber");
-
             List<Room> selectedRooms = (List<Room>) session.getAttribute("selectedRooms");
-
             List<Room> selectedMultipleRooms = (List<Room>) session.getAttribute("selectedMultipleRooms");
-
             if (selectedRooms != null) {
                 selectedRooms.removeIf(r -> r.getRoomNumber().equalsIgnoreCase(roomNumber));
                 session.setAttribute("selectedRooms", selectedRooms);
             }
-
             if (selectedMultipleRooms != null) {
                 selectedMultipleRooms.removeIf(r -> r.getRoomNumber().equalsIgnoreCase(roomNumber));
                 session.setAttribute("selectedMultipleRooms", selectedMultipleRooms);
             }
-
             response.sendRedirect(request.getContextPath() + "/booking");
             return;
         } else if (action.equals("getVouchers")) {
             url = "/WEB-INF/Views/booking.jsp";
+            persistInput(request);
             String code = request.getParameter("voucherCode");
             if (code.isEmpty()) {
                 request.setAttribute("voucherMessage", "Invalid voucher");
@@ -138,10 +124,18 @@ public class BookingServlet extends HttpServlet {
             url = "/WEB-INF/Views/booking.jsp";
             BookingRoomDAO bookingRoomDAO = new BookingRoomDAO();
             List<BookingRoom> bookingRooms = new ArrayList<>();
+            Booking booking = new Booking();
+            User user = (User) session.getAttribute("user");
+            // Check user
+            if (user != null) {
+                booking.setUserId(user.getId());
+            }
+            persistInput(request);
             // Check date
             LocalDate checkIn = LocalDate.parse(request.getParameter("checkIn"));
             LocalDate checkOut = LocalDate.parse(request.getParameter("checkOut"));
             LocalDate today = LocalDate.now();
+
             if (checkIn.isAfter(checkOut)) {
                 request.setAttribute("bookingMessage", "Check in date must be before check out date.");
                 getServletContext().getRequestDispatcher(url).forward(request, response);
@@ -159,16 +153,14 @@ public class BookingServlet extends HttpServlet {
             }
 
             List<Room> rooms = null;
-
             if ("one".equals(request.getParameter("bookingType"))) {
                 rooms = (List<Room>) session.getAttribute("selectedRooms");
             } else {
                 rooms = (List<Room>) session.getAttribute("selectedMultipleRooms");
             }
-
             // Check room
             if (rooms == null || rooms.isEmpty()) {
-                request.setAttribute("bookingMessage", "No room choosed");
+                request.setAttribute("bookingMessage", "No room chose.");
                 getServletContext().getRequestDispatcher(url).forward(request, response);
                 return;
             }
@@ -188,14 +180,9 @@ public class BookingServlet extends HttpServlet {
             }
 
             System.out.println("Done checking room");
-            Booking booking = new Booking();
-            User user = (User) session.getAttribute("user");
-            // Check user
-            if (user != null) {
-                booking.setUserId(user.getId());
-            }
+            
             // Calculate total amount
-            long days = (ChronoUnit.DAYS.between(checkIn, checkOut) );
+            long days = Math.max(1, ChronoUnit.DAYS.between(checkIn, checkOut));
             BigDecimal totalAmount = BigDecimal.ZERO;
             for (Room r : rooms) {
                 totalAmount = totalAmount.add(r.getBasePrice().multiply(BigDecimal.valueOf(days)));
@@ -282,6 +269,11 @@ public class BookingServlet extends HttpServlet {
                 return;
             }
         }
+        else if("cancelBooking".equals(action)){
+            url= "/WEB-INF/Views/booking-history.jsp";
+            long bookingId=Long.parseLong(request.getParameter("cancelBookingId"));
+            bookingDAO.updateBookingStatus(bookingId, "CANCELED");           
+        }
         getServletContext().getRequestDispatcher(url).forward(request, response);
         return;
     }
@@ -292,17 +284,37 @@ public class BookingServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         session.removeAttribute("voucher");
-        List<Room> selectedMultiple = (List<Room>) session.getAttribute("selectedMultipleRooms");
+        User user = (User) session.getAttribute("user");
+        if(user!=null){
+            request.setAttribute("firstName", user.getFirstName());
+            request.setAttribute("lastName", user.getLastName());
+            request.setAttribute("guestEmail", user.getEmail());
+        }
+        
 
         List<Room> selectedSingle = (List<Room>) session.getAttribute("selectedRooms");
-
-        // unify display list
-        if (selectedMultiple != null && !selectedMultiple.isEmpty()) {
-            session.setAttribute("selectedRooms", selectedMultiple);
-        } else if (selectedSingle != null) {
-            session.setAttribute("selectedRooms", selectedSingle);
+        String bookingType=request.getParameter("bookingType");
+        if("one".equals(bookingType)){
+               long roomId = Long.parseLong(request.getParameter("roomId"));
+            RoomDAO roomDAO = new RoomDAO();
+            Room room = roomDAO.getById(roomId);
+            List<Room> selectedRooms = new ArrayList<>();
+            if (room!=null){
+                 selectedRooms.add(room);
+                session.setAttribute("selectedRooms", selectedRooms);
+                request.setAttribute("bookingType", "one");
+            } 
         }
-
+        else{
+            List<Room> selectedMultiple = (List<Room>) session.getAttribute("selectedMultipleRooms");
+            if (selectedMultiple != null && !selectedMultiple.isEmpty()) {
+                session.setAttribute("selectedRooms", selectedMultiple);
+                request.setAttribute("bookingType", "multiple");
+            }
+        }
+        // unify display list
+        
+        
         request.getRequestDispatcher("/WEB-INF/Views/booking.jsp")
                 .forward(request, response);
     }
@@ -327,5 +339,11 @@ public class BookingServlet extends HttpServlet {
         }
         return calcultedTotaAmount;
     }
-
+    public void persistInput(HttpServletRequest request){
+        request.setAttribute("checkIn", request.getParameter("checkIn"));
+        request.setAttribute("checkOut", request.getParameter("checkOut"));
+        request.setAttribute("firstName", request.getParameter("firstName"));
+        request.setAttribute("lastName", request.getParameter("lastName"));
+        request.setAttribute("guestEmail", request.getParameter("guestEmail"));
+    }
 }

@@ -199,6 +199,7 @@
         <nav class="menu">
             <a href="${pageContext.request.contextPath}/home">Home</a>
             <a href="${pageContext.request.contextPath}/vouchers">Vouchers</a>
+            <a href="${pageContext.request.contextPath}/booking-history">Booking History</a>
             <a href="${pageContext.request.contextPath}/logout">Logout</a>
         </nav>
     </header>

@@ -176,7 +176,6 @@ public class BookingDAO extends DBContext {
             "    b.check_out, " +
             "    b.guest_name, " +
             "    b.guest_email, " +
-            "    b.guest_phone, " +
             "    SUM(br.num_adults) as num_adults, " +
             "    SUM(br.num_children) as num_children, " +
             "    b.total_guests, " +
@@ -243,13 +242,7 @@ public class BookingDAO extends DBContext {
                     if (co != null) dto.setCheckOut(co.toLocalDate());
 
                     dto.setGuestName(rs.getString("guest_name"));
-                    dto.setGuestEmail(rs.getString("guest_email"));
-                    
-                    // Fallback using try-catch inside row mapping just in case their DB hasn't been updated with guest_phone
-                    String phone = "";
-                    try { phone = rs.getString("guest_phone"); } catch(Exception e) {}
-                    dto.setGuestPhone(phone);
-                    
+                    dto.setGuestEmail(rs.getString("guest_email"));                   
                     dto.setNumAdults(rs.getInt("num_adults"));
                     dto.setNumChildren(rs.getInt("num_children"));
                     dto.setTotalBookedGuests(rs.getInt("total_guests"));
@@ -279,5 +272,41 @@ public class BookingDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+    public List<Booking> getUserBooking(long userId, int page, int pageSize){
+        List<Booking> bookings = new ArrayList<>();
+        String sql = "SELECT * FROM booking " +
+                 "WHERE user_id = ? " +
+                 "ORDER BY created_at DESC " +
+                 "LIMIT ? OFFSET ?";
+        try(Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setLong(1, userId);
+            ps.setInt(2, pageSize);
+            ps.setInt(3, (page - 1) * pageSize);
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                Booking booking = new Booking();
+                booking.setId(rs.getLong("id"));
+                booking.setUserId(rs.getLong("user_id"));
+                booking.setVoucherId(rs.getLong("voucher_id"));
+                booking.setCheckIn(LocalDate.parse(rs.getString("check_in")));
+                booking.setCheckOut(LocalDate.parse(rs.getString("check_out")));
+                booking.setGuestName(rs.getString("guest_name"));
+                booking.setGuestEmail(rs.getString("guest_email"));
+                booking.setTotalGuests(rs.getInt("total_guests"));
+                booking.setConfirmationCode(rs.getString("confirmation_code"));
+                booking.setTotalAmount(rs.getBigDecimal("total_amount"));
+                booking.setStatus(rs.getString("status"));
+                booking.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                
+                bookings.add(booking);
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return bookings;
     }
 }

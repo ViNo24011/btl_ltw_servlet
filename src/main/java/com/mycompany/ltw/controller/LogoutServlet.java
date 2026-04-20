@@ -24,7 +24,7 @@ public class LogoutServlet extends HttpServlet {
         }
         
         // 3. Chuyển hướng về trang login kèm thông báo (tùy chọn)
-        response.sendRedirect(request.getContextPath() + "/login?message=logged_out");
+        response.sendRedirect(request.getContextPath() + "/home");
     }
 
     @Override

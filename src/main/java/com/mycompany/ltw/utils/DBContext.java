@@ -10,7 +10,7 @@ public class DBContext {
     private static final String dbName = "hotel_booking_db";
     private static final String portNumber = "3306";
     private static final String userID = "root";
-    private static final String password = "trungduc17"; // Thay pass vào đây
+    private static final String password = "123456789"; // Thay pass vào đây
 
 
 

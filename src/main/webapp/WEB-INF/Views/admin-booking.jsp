@@ -286,7 +286,7 @@
                 <th>Room ID/No</th>
                 <th>Voucher ID</th>
                 <th>Guest Name</th>
-                <th>Email / Phone</th>
+                <th>Email</th>
                 <th>Guests (A/C)</th>
                 <th>Check-In / Out</th>
                 <th>Total Amount</th>
@@ -303,10 +303,7 @@
                     <td>${b.roomNumber}</td>
                     <td>${b.voucherId != null ? b.voucherId : '-'}</td>
                     <td>${b.guestName}</td>
-                    <td>
-                        <div>${b.guestEmail}</div>
-                        <div style="font-size: 0.8rem; color:#64748b;">${not empty b.guestPhone ? b.guestPhone : 'No phone'}</div>
-                    </td>
+                    <td>${b.guestEmail}</td>
                     <td>
                         <div>${b.totalBookedGuests} Total</div>
                         <span class="time-subtext">${b.numAdults} Adult(s), ${b.numChildren} Child(ren)</span>

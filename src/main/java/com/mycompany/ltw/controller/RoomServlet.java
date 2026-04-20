@@ -98,7 +98,7 @@ public class RoomServlet extends HttpServlet {
             throws ServletException, IOException {
 
         User user = getUser(req);
-        if (user != null && "bookRooms".equals(req.getParameter("action"))) {
+        if ("bookRooms".equals(req.getParameter("action"))) {
             long roomId = Long.parseLong(req.getParameter("roomId"));
             Room selectedRoom = new RoomDAO().getById(roomId);
 
