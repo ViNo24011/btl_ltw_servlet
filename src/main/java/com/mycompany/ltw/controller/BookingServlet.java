@@ -274,9 +274,11 @@ public class BookingServlet extends HttpServlet {
             }
         }
         else if("cancelBooking".equals(action)){
-            url= "/WEB-INF/Views/booking-history.jsp";
+
             long bookingId=Long.parseLong(request.getParameter("cancelBookingId"));
-            bookingDAO.updateBookingStatus(bookingId, "CANCELED");           
+            bookingDAO.updateBookingStatus(bookingId, "CANCELED"); 
+            response.sendRedirect(request.getContextPath() + "/booking-history");
+            return;
         }
         getServletContext().getRequestDispatcher(url).forward(request, response);
         return;

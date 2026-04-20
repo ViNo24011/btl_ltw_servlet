@@ -7,6 +7,8 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,6 @@ public class RoomServlet extends HttpServlet {
 
             // ================= LIST =================
             case "list":
-
                 int page = req.getParameter("page") == null ? 1 :
                         Integer.parseInt(req.getParameter("page"));
                 HttpSession session= req.getSession();
@@ -86,6 +87,27 @@ public class RoomServlet extends HttpServlet {
             case "delete":
                 dao.delete(Long.valueOf(req.getParameter("id")));
                 resp.sendRedirect(req.getContextPath() + "/admin/room?action=list");
+                break;
+            case "search":
+                String checkInStr = req.getParameter("checkInSearch");
+                String checkOutStr = req.getParameter("checkOutSearch");
+
+                if (checkInStr != null && checkOutStr != null && !checkInStr.isEmpty() && !checkOutStr.isEmpty()) {
+
+                    LocalDate checkIn = LocalDate.parse(checkInStr);
+                    LocalDate checkOut = LocalDate.parse(checkOutStr);
+                    BookingDAO bookingDAO = new BookingDAO();
+                    try {
+                        List<Room> freeRooms = bookingDAO.getFreeRooms(checkIn, checkOut);
+                        req.setAttribute("allRooms", freeRooms);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                req.setAttribute("checkInSearch", checkInStr);
+                req.setAttribute("checkOutSearch", checkOutStr);
+                req.setAttribute("roomTypes", typeDAO.getAll());
+                req.getRequestDispatcher("/WEB-INF/Views/index.jsp").forward(req, resp);
                 break;
 
             default:

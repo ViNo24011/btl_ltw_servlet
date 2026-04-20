@@ -479,27 +479,7 @@
         </div>
     </section>
 
-    <section class="search-card">
-        <div class="field">
-            <label>Check-in Date</label>
-            <input type="date">
-        </div>
-        <div class="field">
-            <label>Check-out Date</label>
-            <input type="date">
-        </div>
-        <div class="field">
-            <label>Room Type</label>
-            <select>
-                <option>Select a room type</option>
-                <option>Standard</option>
-                <option>Deluxe</option>
-                <option>Suite</option>
-                <option>Family</option>
-            </select>
-        </div>
-        <button class="search-btn" type="button">Search</button>
-    </section>
+    
 
     <section class="section" id="rooms">
         <a href="${pageContext.request.contextPath}/room"><h2>Browse Rooms</h2></a>
@@ -516,7 +496,22 @@
             </c:forEach>
         </div>
     </section>
-
+        
+    <form class="search-card" action="room" method="get">   
+        <input type="hidden" name="action" value="search">
+        <div class="field">
+            <label>Check-in Date:</label>
+            <input name="checkInSearch" type="date" value="${checkInSearch}">
+        </div>
+        <div class="field">
+            <label>Check-out Date:</label>
+            <input name="checkOutSearch" value="${checkOutSearch}" type="date">
+        </div>
+        
+        
+        <button class="search-btn" type="submit">Search</button>
+    </form>
+        
     <section class="section booking-list" id="bookings">
         <div class="list-head">
             <div class="filter-box">

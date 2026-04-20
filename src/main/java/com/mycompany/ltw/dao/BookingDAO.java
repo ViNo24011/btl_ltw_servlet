@@ -329,4 +329,75 @@ public class BookingDAO extends DBContext {
 
         return true; // không tồn tại, unique
     }
+    public List<Room> getFreeRooms(LocalDate checkIn, LocalDate checkOut) throws SQLException {
+        
+        if( checkIn.isAfter(checkOut)){
+            return null;
+        }
+        List<Room> freeRooms = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT r.* " +
+            "FROM room r " +
+            "WHERE 1=1 "
+        );
+
+        List<Object> params = new ArrayList<>();
+
+        if (checkIn != null && checkOut != null) {
+            sql.append(
+                " AND NOT EXISTS ( " +
+                "   SELECT 1 FROM booking_room br " +
+                "   JOIN booking b ON b.id = br.booking_id " +
+                "   WHERE br.room_id = r.id " +
+                "   AND b.check_in <= ? " +
+                "   AND b.check_out >= ? " +
+                " ) "
+            );
+            params.add(checkOut);
+            params.add(checkIn);
+        } else if (checkIn != null) {
+            sql.append(
+                " AND NOT EXISTS ( " +
+                "   SELECT 1 FROM booking_room br " +
+                "   JOIN booking b ON b.id = br.booking_id " +
+                "   WHERE br.room_id = r.id " +
+                "   AND b.check_out >= ? " +
+                " ) "
+            );
+            params.add(checkIn);
+        } else if (checkOut != null) {
+            sql.append(
+                " AND NOT EXISTS ( " +
+                "   SELECT 1 FROM booking_room br " +
+                "   JOIN booking b ON b.id = br.booking_id " +
+                "   WHERE br.room_id = r.id " +
+                "   AND b.check_in <= ? " +
+                " ) "
+            );
+            params.add(checkOut);
+        }
+        try(Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql.toString());){
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Room room = new Room(
+                    rs.getLong("id"),
+                    rs.getLong("room_type_id"),
+                    rs.getString("room_number"),
+                    rs.getString("photo"),
+                    rs.getString("status")
+                );
+                freeRooms.add(room);
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return freeRooms;
+    }
 }
