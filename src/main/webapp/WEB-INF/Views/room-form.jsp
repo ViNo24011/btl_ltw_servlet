@@ -50,7 +50,7 @@
     <div class="container d-flex justify-content-between">
 
         <a class="navbar-brand"
-           href="${pageContext.request.contextPath}/admin/dashboard">
+           href="${pageContext.request.contextPath}/admin/room">
             Admin Panel
         </a>
 
@@ -74,7 +74,7 @@
 <div class="container container-main">
 
     <div class="card p-4 shadow-sm">
-        <h3 class="mb-4">Sửa phòng</h3>
+        <h3 class="mb-4">Sửa / Thêm Phòng</h3>
 
         <!-- ⚠️ SỬA ACTION -->
         <form method="post" action="${pageContext.request.contextPath}/admin/room">
