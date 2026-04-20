@@ -423,29 +423,64 @@
     <header class="topbar">
         <div class="brand"><span class="accent">lake</span>Side Hotel</div>
         <nav class="menu">
-            <a href="${pageContext.request.contextPath}/room">Browse all rooms</a>
-            <c:set var="isAdmin" value="false" />
-            <c:forEach var="role" items="${sessionScope.user.roles}">
-                <c:if test="${role.name == 'ROLE_ADMIN'}">
-                    <c:set var="isAdmin" value="true" />
-                </c:if>
-            </c:forEach>
-            <c:if test="${isAdmin}">
-                <a href="${pageContext.request.contextPath}/roomtype">Manage</a>
-                <a href="${pageContext.request.contextPath}/admin/voucher">Manage Voucher</a>
-                <a href="${pageContext.request.contextPath}/admin/booking">Manage Booking</a>
+
+    <!-- FIX QUAN TRỌNG -->
+    <c:set var="isAdmin" value="false" />
+    <c:if test="${not empty sessionScope.user}">
+        <c:forEach var="role" items="${sessionScope.user.roles}">
+            <c:if test="${role.name == 'ROLE_ADMIN'}">
+                <c:set var="isAdmin" value="true" />
             </c:if>
-            <a href="${pageContext.request.contextPath}/booking">My Booking</a>
-            <c:choose>
-                <c:when test="${not empty sessionScope.user}">
-                    <a href="${pageContext.request.contextPath}/profile">Profile</a>
-                    <a href="${pageContext.request.contextPath}/logout">Logout</a>
-                </c:when>
-                <c:otherwise>
-                    <a href="${pageContext.request.contextPath}/login">Account</a>
-                </c:otherwise>
-            </c:choose>
-        </nav>
+        </c:forEach>
+    </c:if>
+
+    <!-- Browse Rooms -->
+    <c:choose>
+        <c:when test="${isAdmin}">
+            <a href="${pageContext.request.contextPath}/admin/room?action=list">
+                Browse all rooms
+            </a>
+        </c:when>
+        <c:otherwise>
+            <a href="${pageContext.request.contextPath}/room">
+                Browse all rooms
+            </a>
+        </c:otherwise>
+    </c:choose>
+
+    <!-- ADMIN MENU -->
+    <c:if test="${isAdmin}">
+        <a href="${pageContext.request.contextPath}/roomtype?action=list">
+            Manage Room Type
+        </a>
+
+        <a href="${pageContext.request.contextPath}/room?action=list">
+            Manage Room
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/voucher">
+            Manage Voucher
+        </a>
+
+        <a href="${pageContext.request.contextPath}/admin/booking">
+            Manage Booking
+        </a>
+    </c:if>
+
+    <!-- USER -->
+    <a href="${pageContext.request.contextPath}/booking">My Booking</a>
+
+    <c:choose>
+        <c:when test="${not empty sessionScope.user}">
+            <a href="${pageContext.request.contextPath}/profile">Profile</a>
+            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+        </c:when>
+        <c:otherwise>
+            <a href="${pageContext.request.contextPath}/login">Account</a>
+        </c:otherwise>
+    </c:choose>
+
+</nav>
     </header>
 
     <section class="hero">
@@ -617,3 +652,4 @@
     renderRooms();
 </script>
 </body>
+</html>
