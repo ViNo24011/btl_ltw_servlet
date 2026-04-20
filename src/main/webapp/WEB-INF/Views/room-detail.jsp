@@ -153,7 +153,7 @@
 
         <div class="menu">
             <a href="${pageContext.request.contextPath}/home">Home</a>
-            <a href="${pageContext.request.contextPath}/room">Rooms</a>
+            <a href="${pageContext.request.contextPath}/admin/room">Rooms</a>
 
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
@@ -204,13 +204,11 @@
                 ${room.roomType.description}
             </div>
 
-            <form action="${pageContext.request.contextPath}/booking" method="post">
-                <input type="hidden" name="action" value="bookOneRoom">
-                <input type="hidden" name="roomId" value="${room.id}">
-                <button type="submit" class="btn-book">
+            <a href="${pageContext.request.contextPath}/booking?action=create&roomId=${room.id}">
+                <button class="btn-book">
                     Book this room
                 </button>
-            </form>
+            </a>
 
         </div>
 
