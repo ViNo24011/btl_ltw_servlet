@@ -81,21 +81,18 @@
                 </span>
             </c:if>
 
-            <a class="btn btn-roomtype me-2"
-               href="${pageContext.request.contextPath}/roomtype">
-                Manage Room Types
-            </a>
-
+            
             <a class="btn btn-custom me-2"
                href="${pageContext.request.contextPath}/admin/room?action=new">
                 Add Room
             </a>
+            <a class="btn btn-roomtype me-2"
+               href="${pageContext.request.contextPath}/home">
+                Quay lại
+            </a>
 
             <c:if test="${not empty sessionScope.user}">
-                <a class="btn btn-danger"
-                   href="${pageContext.request.contextPath}/logout">
-                    Logout
-                </a>
+                
             </c:if>
 
         </div>
@@ -185,4 +182,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-</html>admin-roo
+</html>
