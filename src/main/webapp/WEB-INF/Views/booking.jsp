@@ -458,7 +458,7 @@
         <!-- Booking -->
         <form class="form-box" action="booking" method="post">
             <input type="hidden" name="action" value="createBooking">
-            <input type="hidden" name="bookingType" value="${bookingType}">
+            <input type="hidden" name="bookingType" value="${sessionScope.bookingType}">
             <div class="form-group">
                 <label>Check in date:</label>
                 <input type="date" name="checkIn" value="${sessionScope.checkIn}" required>

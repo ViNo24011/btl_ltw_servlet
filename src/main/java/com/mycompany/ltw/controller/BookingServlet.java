@@ -306,16 +306,16 @@ public class BookingServlet extends HttpServlet {
             Room room = roomDAO.getById(roomId);
             List<Room> selectedRooms = new ArrayList<>();
             if (room!=null){
-                 selectedRooms.add(room);
+                selectedRooms.add(room);
                 session.setAttribute("selectedRooms", selectedRooms);
-                request.setAttribute("bookingType", "one");
+                session.setAttribute("bookingType", "one");
             } 
         }
         else{
             List<Room> selectedMultiple = (List<Room>) session.getAttribute("selectedMultipleRooms");
             if (selectedMultiple != null && !selectedMultiple.isEmpty()) {
                 session.setAttribute("selectedRooms", selectedMultiple);
-                request.setAttribute("bookingType", "multiple");
+                session.setAttribute("bookingType", "multiple");
             }
         }
         // unify display list
