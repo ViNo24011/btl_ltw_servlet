@@ -158,13 +158,7 @@ public class BookingServlet extends HttpServlet {
                 return;
             }
 
-            List<Room> rooms = null;
-
-            if ("one".equals(request.getParameter("bookingType"))) {
-                rooms = (List<Room>) session.getAttribute("selectedRooms");
-            } else {
-                rooms = (List<Room>) session.getAttribute("selectedMultipleRooms");
-            }
+            List<Room> rooms = (List<Room>) session.getAttribute("selectedRooms");
 
             // Check room
             if (rooms == null || rooms.isEmpty()) {
