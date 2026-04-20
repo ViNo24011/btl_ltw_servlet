@@ -1,8 +1,9 @@
 package com.mycompany.ltw.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class RoomType {
+public class RoomType implements Serializable{
     private Long id;
     private String name;
     private BigDecimal basePrice;
@@ -10,6 +11,14 @@ public class RoomType {
     private String description;
 
     public RoomType() {}
+
+    public RoomType(Long id, String name, BigDecimal basePrice, int maxCapacity, String description) {
+        this.id = id;
+        this.name = name;
+        this.basePrice = basePrice;
+        this.maxCapacity = maxCapacity;
+        this.description = description;
+    }
 
     // Getters and Setters
     public Long getId() { return id; }
