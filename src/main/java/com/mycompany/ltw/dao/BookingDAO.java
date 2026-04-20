@@ -309,4 +309,24 @@ public class BookingDAO extends DBContext {
         }
         return bookings;
     }
+    public boolean isConfirmationCodeUnique(String confirmationCode) {
+        String sql = "SELECT 1 FROM booking WHERE confirmation_code = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, confirmationCode);
+            ResultSet rs = ps.executeQuery();
+
+            //nếu có kết quả code đã tồn tại, NOT unique
+            if (rs.next()) {
+                return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true; // không tồn tại, unique
+    }
 }

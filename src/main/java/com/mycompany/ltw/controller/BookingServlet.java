@@ -333,6 +333,12 @@ public class BookingServlet extends HttpServlet {
         for (int i = 0; i < maxLength; i++) {
             res += characters.charAt(rand.nextInt(characters.length()));
         }
+        while(!bookingDAO.isConfirmationCodeUnique(res)){
+            res="";
+             for (int i = 0; i < maxLength; i++) {
+                res += characters.charAt(rand.nextInt(characters.length()));
+            }
+        }
         return res;
     }
 
