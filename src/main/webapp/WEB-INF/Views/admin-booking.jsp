@@ -230,7 +230,8 @@
         <div class="brand"><span class="accent">lake</span>Side Hotel</div>
         <nav class="menu">
             <a href="${pageContext.request.contextPath}/home">Home</a>
-            <a href="${pageContext.request.contextPath}/roomtype">Manage Room</a>
+            <a href="${pageContext.request.contextPath}/roomtype?action=list">Manage Room Type</a>
+            <a href="${pageContext.request.contextPath}/admin/room?action=list">Manage Room</a>
             <a href="${pageContext.request.contextPath}/admin/voucher">Manage Voucher</a>
             <a href="${pageContext.request.contextPath}/admin/booking">Manage Booking</a>
             <a href="${pageContext.request.contextPath}/logout">Logout</a>
