@@ -450,6 +450,7 @@
             <a href="${pageContext.request.contextPath}/room">
                 Browse all rooms
             </a>
+            <a href="${pageContext.request.contextPath}/booking">My Booking</a>
         </c:otherwise>
     </c:choose>
 
@@ -460,8 +461,7 @@
         <a href="${pageContext.request.contextPath}/admin/booking">Manage Booking</a>
     </c:if>
 
-    <!-- USER -->
-    <a href="${pageContext.request.contextPath}/booking">My Booking</a>
+    <!-- USER -->   
 
     <c:choose>
         <c:when test="${not empty sessionScope.user}">

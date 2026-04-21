@@ -193,16 +193,18 @@
         <div class="brand"><span>lake</span>Side Hotel</div>
         <div class="menu">
             <a href="${pageContext.request.contextPath}/home">Home</a>
-            <a href="${pageContext.request.contextPath}/booking">My Booking</a>
+            
 
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
                     <a href="${pageContext.request.contextPath}/profile">
                         Profile
                     </a>
+                    <a href="${pageContext.request.contextPath}/booking">My Booking</a>
                     <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </c:when>
                 <c:otherwise>
+                    <a href="${pageContext.request.contextPath}/booking">My Booking</a>
                     <a href="${pageContext.request.contextPath}/login">Login</a>
                 </c:otherwise>
             </c:choose>

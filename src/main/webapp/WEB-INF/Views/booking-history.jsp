@@ -271,7 +271,9 @@
                 </nav>
             </header>
             <div style="border: 1px solid #ccc; padding: 50px;margin-top: 10px; border-radius: 10px; background: white; min-width: 400px;">
-                <label class="brand"><strong>Booking History</strong></label>
+                <label class="brand"><strong>Booking History</strong></label><br>
+                <label style="color: black;"><strong>You can continue the payment process or cancel paid bookings before check in date.</strong></label>
+
                 <div class="table-container">
                     <table>
                         <thead>
@@ -299,7 +301,7 @@
                                     <td>${booking.status}</td>
                                     <td>${booking.createdAt.toString().replace('T',' ')}</td>
                                     <td>
-                                        <c:if test="${now.isBefore(booking.checkOut) && booking.status == 'PAID'}">
+                                        <c:if test="${now.isBefore(booking.checkIn) && booking.status == 'PAID'}">
                                             <form action="booking" method="post" style="display:flex; gap:10px; align-items:center; margin-top: 10px;">                                         
                                                 <input type="hidden" name="action" value="cancelBooking">
                                                 <input type="hidden" name="cancelBookingId" value="${booking.id}">

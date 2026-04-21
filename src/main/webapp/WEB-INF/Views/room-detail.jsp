@@ -154,7 +154,7 @@
         <div class="menu">
             <a href="${pageContext.request.contextPath}/home">Home</a>
             <a href="${pageContext.request.contextPath}/room">Browse all rooms</a>
-
+            <a href="${pageContext.request.contextPath}/booking">My Booking</a>
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
                     <a href="${pageContext.request.contextPath}/profile">

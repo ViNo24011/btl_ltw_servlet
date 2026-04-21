@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 import javax.servlet.http.HttpSession;
 /**
  *
@@ -34,17 +35,17 @@ public class PaymentServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session=request.getSession();
-        Booking booking= (Booking) session.getAttribute("booking");
+        
         String action=request.getParameter("action");
         if("continuePayment".equals(action)){
             continuePayment(request, response);
-            return;
         }
-        List<BookingRoom> bookedRooms=(List<BookingRoom>) session.getAttribute("bookedRooms");
-        if(booking==null || bookedRooms==null){
+        Booking booking= (Booking) session.getAttribute("booking");
+        if(booking==null){
             getServletContext().getRequestDispatcher("/WEB-INF/Views/booking.jsp").forward(request, response);
             return;
         }
+        
         String bankId = "VCB";           // Vietnam Techcombank
         String accountNo = "0123456789"; // Your account number
         String template = "compact";     // compact or print
@@ -81,8 +82,18 @@ public class PaymentServlet extends HttpServlet {
             BookingDAO bookingDAO= new BookingDAO();
             BookingRoomDAO bookingRoomDAO= new BookingRoomDAO();
             try{
-                bookingDAO.updateBookingStatus(booking.getId(), "PAID");
-                request.setAttribute("paymentMessage", "Booking succeeded");
+                Booking checkBooking = bookingDAO.getById(booking.getId());
+                if(checkBooking.getConfirmationCode()!=null){
+                     request.setAttribute("paymentMessage", "Already paid this booking.");
+                     request.setAttribute("confirmationCode", checkBooking.getConfirmationCode());
+                }
+                else{
+                    String confirmationCode=getConfirmationCode();
+                    bookingDAO.updateConfirmationCodeById(booking.getId(), confirmationCode);
+                    request.setAttribute("confirmationCode", confirmationCode);
+                    bookingDAO.updateBookingStatus(booking.getId(), "PAID");
+                    request.setAttribute("paymentMessage", "Booking succeeded");
+                } 
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -101,10 +112,11 @@ public class PaymentServlet extends HttpServlet {
         long selectedBookingId = Long.parseLong(request.getParameter("selectedBookingId"));
         Booking booking = bookingDAO.getById(selectedBookingId);
         session.setAttribute("booking", booking);
+        
         session.setAttribute("voucher", booking.getVoucherId());
         session.setAttribute("guestName",booking.getGuestName());
         session.setAttribute("guestEmail", booking.getGuestEmail());
-        session.setAttribute("confirmationCode", booking.getConfirmationCode());
+        //session.setAttribute("confirmationCode", booking.getConfirmationCode());
         session.setAttribute("checkIn", booking.getCheckIn());
         session.setAttribute("checkOut", booking.getCheckOut());
         session.setAttribute("totalGuest", booking.getTotalGuests());
@@ -113,22 +125,22 @@ public class PaymentServlet extends HttpServlet {
         if(booking.getVoucherId()!=null){
             session.setAttribute("voucher", voucherDAO.getById(booking.getVoucherId()));
         }       
-        
-        String bankId = "VCB";           // Vietnam Techcombank
-        String accountNo = "0123456789"; // Your account number
-        String template = "compact";     // compact or print
-        String amount = booking.getTotalAmount().toString();
-        String description = booking.getId().toString();
-        String accountName = "lakeSide Hotel"; // Your business name
-        
-        // Build QR URL with correct format
-        String qrUrl = "https://img.vietqr.io/image/" 
-                + bankId + "-" 
-                + accountNo + "-" 
-                + template + ".png?"
-                + "amount=" + amount;
-
-        session.setAttribute("qrUrl", qrUrl);
-        getServletContext().getRequestDispatcher("/WEB-INF/Views/payment.jsp").forward(request, response);
+    }
+    public String getConfirmationCode() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        String res = "";
+        Random rand = new Random();
+        BookingDAO bookingDAO= new BookingDAO();
+        int maxLength = 10;
+        for (int i = 0; i < maxLength; i++) {
+            res += characters.charAt(rand.nextInt(characters.length()));
+        }
+        while(!bookingDAO.isConfirmationCodeUnique(res)){
+            res="";
+             for (int i = 0; i < maxLength; i++) {
+                res += characters.charAt(rand.nextInt(characters.length()));
+            }
+        }
+        return res;
     }
 }

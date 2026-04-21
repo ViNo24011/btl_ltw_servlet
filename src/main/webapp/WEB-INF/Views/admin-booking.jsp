@@ -201,7 +201,7 @@
         .status-badge.checked-in { background: #bfdbfe; color: #1e3a8a; }
         .status-badge.checked-out { background: #bbf7d0; color: #14532d; }
         .status-badge.cancelled { background: #fecaca; color: #7f1d1d; }
-
+        .status-badge.unpaid { background: gray; color: #7f1d1d; }
         .time-subtext {
             display: block;
             font-size: 0.75rem;
@@ -251,6 +251,7 @@
             <div class="filter-item">
                 <label>🏷️ Status</label>
                 <select name="status">
+                    <option value="UNPAID" ${status == 'UNPAID' ? 'selected' : ''}>UNPAID</option>
                     <option value="PAID" ${status == 'PAID' ? 'selected' : ''}>PAID</option>
                     <option value="CHECKED-IN" ${status == 'CHECKED-IN' ? 'selected' : ''}>CHECKED-IN</option>
                     <option value="CHECKED-OUT" ${status == 'CHECKED-OUT' ? 'selected' : ''}>CHECKED-OUT</option>
@@ -315,6 +316,7 @@
                     <td><fmt:formatNumber value="${b.totalAmount}" type="number" groupingUsed="true" /> VND</td>
                     <td>
                         <c:choose>
+                            <c:when test="${b.status == 'UNPAID'}"><span class="status-badge unpaid">${b.status}</span></c:when>
                             <c:when test="${b.status == 'PAID'}"><span class="status-badge paid">${b.status}</span></c:when>
                             <c:when test="${b.status == 'CHECKED-IN'}"><span class="status-badge checked-in">${b.status}</span></c:when>
                             <c:when test="${b.status == 'CHECKED-OUT'}"><span class="status-badge checked-out">${b.status}</span></c:when>
@@ -334,6 +336,7 @@
                             <input type="hidden" name="toDate" value="${toDate}">
                             
                             <select name="newStatus" class="action-select" onchange="this.form.submit()">
+                                <option value="UNPAID" ${b.status == 'UNPAID' ? 'selected' : ''}>UNPAID</option>
                                 <option value="PAID" ${b.status == 'PAID' ? 'selected' : ''}>PAID</option>
                                 <option value="CHECKED-IN" ${b.status == 'CHECKED-IN' ? 'selected' : ''}>CHECKED-IN</option>
                                 <option value="CHECKED-OUT" ${b.status == 'CHECKED-OUT' ? 'selected' : ''}>CHECKED-OUT</option>

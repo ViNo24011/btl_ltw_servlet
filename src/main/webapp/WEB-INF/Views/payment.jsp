@@ -392,47 +392,39 @@
             display: grid;
             grid-template-columns: 3fr 1fr;
         }
+        .info-box{
+            display: grid;
+            grid-template-rows:  6fr 1fr 1fr;
+        }
     </style>
 </head>
 <body>
     <main class="page">
     <header class="topbar">
         <div class="brand"><a href="${pageContext.request.contextPath}/home" style="text-decoration: none; color: black;"><span class="accent">lake</span>Side Hotel</a></div>
-        <nav class="menu">
+        <div class="menu">
+            <a href="${pageContext.request.contextPath}/home">Home</a>
             <a href="${pageContext.request.contextPath}/room">Browse all rooms</a>
-            <c:set var="isAdmin" value="false" />
-            <c:forEach var="role" items="${sessionScope.user.roles}">
-                <c:if test="${role.name == 'ROLE_ADMIN'}">
-                    <c:set var="isAdmin" value="true" />
-                </c:if>
-            </c:forEach>
-            <c:if test="${isAdmin}">
-                <a href="${pageContext.request.contextPath}/roomtype">Manage</a>
-                <a href="${pageContext.request.contextPath}/admin/voucher">Manage Voucher</a>
-                <a href="${pageContext.request.contextPath}/admin/booking">Manage Booking</a>
-            </c:if>
             <a href="${pageContext.request.contextPath}/booking">My Booking</a>
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
-                    <a href="${pageContext.request.contextPath}/home">Home</a>
                     <a href="${pageContext.request.contextPath}/profile">Profile</a>
                     <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="${pageContext.request.contextPath}/login">Account</a>
+                    <a href="${pageContext.request.contextPath}/login">Login</a>
                 </c:otherwise>
             </c:choose>
-        </nav>
+        </div>
     </header>
     
         <div style="border: 1px solid #ccc; padding: 50px;margin-top: 10px; border-radius: 10px; background: white; min-width: 400px;">
             <label class="brand"><strong>Payment</strong></label>
             <div class="payment-container">
                 <div class="info-box">
-                    <div class="info-box">
                     <table class="info-table">
                         <tr>
-                            <td><strong>First name:</strong></td>
+                            <td><strong>Guest name:</strong></td>
                             <td>${sessionScope.guestName}</td>
 
                             <td></td>
@@ -443,8 +435,8 @@
                             <td><strong>Email:</strong></td>
                             <td>${sessionScope.guestEmail}</td>
 
-                            <td><strong>Confirmation code:</strong></td>
-                            <td>${sessionScope.confirmationCode}</td>
+                            <td><strong>Total amount:</strong></td>
+                            <td>${sessionScope.totalAmount} VND</td>
                         </tr>
 
                         <tr>
@@ -459,12 +451,7 @@
                             <td><strong>Total guests:</strong></td>
                             <td>${sessionScope.totalGuest}</td>
 
-                            <td><strong>Total amount:</strong></td>
-                            <td>${sessionScope.totalAmount} VND</td>
-                        </tr>
-
-                        <tr>
-                             <c:if test="${not empty sessionScope.voucher}">
+                            <c:if test="${not empty sessionScope.voucher}">
                                 <tr>
                                     <td><strong>Voucher:</strong></td>
                                     <td>
@@ -481,15 +468,27 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
-                            </c:if>                               
-                            <td></td>
-                            <td></td>
+                            </c:if>        
                         </tr>
-                       
                     </table>
+                    <c:choose>
+                        <c:when test="${not empty confirmationCode}">
+                            <label><em><strong>*Please remember your confirmation code if you are not logged in.</strong></em></label>
+                            <div style="display: flex;">
+                                <label ><strong style="color: #a64d79;">Confirmation code:</strong></label>
+                                <label>${confirmationCode}</label><br>
+                            </div>   
+                            
+                        </c:when>
+                        <c:otherwise>
+                            <label></label>
+                            <div>  
+                            </div> 
+                        </c:otherwise>
+                    </c:choose>
                 </div>                   
                     
-                </div>
+
                 <div class="qr">
                     <img style="width: 300px;height: 300px;" src="${qrUrl}" />
                 </div>
@@ -502,10 +501,7 @@
                 <input type="hidden" name="action" value="confirmPayment">
                 <button type="submit">Confirm payment</button>
             </form> 
-        <!-- voucher -->
-       
-       
-    </div>
+        </div>
     </div>
     
 </main>

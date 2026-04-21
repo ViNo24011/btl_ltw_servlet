@@ -446,6 +446,20 @@ public class BookingDAO extends DBContext {
 
         return null;
     }
+    public void updateConfirmationCodeById(long bookingId, String confirmationCode) {
+    String sql = "UPDATE booking SET confirmation_code = ? WHERE id = ?";
 
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, confirmationCode);
+        ps.setLong(2, bookingId);
+
+        ps.executeUpdate();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
     
 }

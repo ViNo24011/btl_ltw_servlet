@@ -84,7 +84,7 @@ public class BookingServlet extends HttpServlet {
         bookingDAO = new BookingDAO();
         HttpSession session = request.getSession();
         String action=request.getParameter("action");
-        session.removeAttribute("voucher");
+        
         User user = (User) session.getAttribute("user");
         if(user!=null){
             session.setAttribute("firstName", user.getFirstName());
@@ -148,7 +148,7 @@ public class BookingServlet extends HttpServlet {
         HttpSession session=request.getSession();
         persistInput(request);
         String code = request.getParameter("voucherCode");
-        if (code == null || code.trim().isEmpty()) {
+        if (code == null || code.trim().isEmpty() || !code.matches("^[\\p{L}\\p{N}\\s]+$")) {
             request.setAttribute("voucherMessage", "Invalid voucher");
             getServletContext().getRequestDispatcher(url).forward(request, response);
             return;
@@ -157,6 +157,7 @@ public class BookingServlet extends HttpServlet {
         if (voucher == null) {
             request.setAttribute("voucherMessage", "Invalid voucher");
         } else {
+            
             Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
             if (voucher.isIsActive() == false || voucher.getExpiryDate().before(dateTime)
                     || voucher.getUsageLimit() <= voucher.getUsedCount()) {
@@ -210,7 +211,9 @@ public class BookingServlet extends HttpServlet {
         String url = "/WEB-INF/Views/booking.jsp";
         HttpSession session=request.getSession();
         persistInput(request);
-        checkInput(request, response);
+        if(checkInput(request, response)==false){
+            return;
+        }
         
         BookingRoomDAO bookingRoomDAO = new BookingRoomDAO();
         List<BookingRoom> bookingRooms = new ArrayList<>();
@@ -306,8 +309,7 @@ public class BookingServlet extends HttpServlet {
         booking.setStatus("UNPAID");
         // Create code
 
-        booking.setConfirmationCode(getConfirmationCode());
-        session.setAttribute("confirmationCode", booking.getConfirmationCode());
+        
         // Check guests
         int totalGuest = 0;
         for (Room room : rooms) {
@@ -379,17 +381,14 @@ public class BookingServlet extends HttpServlet {
 
         session.setAttribute("booking", booking);
         session.setAttribute("bookedRooms", bookingRooms);
-        if(user==null){
-            List<Booking> guestBookings= new ArrayList<>();
-            session.setAttribute("guestBookings", guestBookings);
-        }
         response.sendRedirect(request.getContextPath() + "/payment");
     }
     public void cancelBooking(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
         String url = "/WEB-INF/Views/booking-history.jsp";
         long bookingId=Long.parseLong(request.getParameter("cancelBookingId"));
-        bookingDAO.updateBookingStatus(bookingId, "CANCELED"); 
-        getServletContext().getRequestDispatcher(url).forward(request, response);
+        bookingDAO.updateBookingStatus(bookingId, "CANCELLED"); 
+
+        response.sendRedirect(request.getContextPath() + "/booking?action=bookingHistory");
     }
 
     private void getBookingHistory(HttpServletRequest request, HttpServletResponse response)
@@ -431,22 +430,7 @@ public class BookingServlet extends HttpServlet {
         request.getRequestDispatcher(url).forward(request, response);
     
     }
-    public String getConfirmationCode() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        String res = "";
-        Random rand = new Random();
-        int maxLength = 10;
-        for (int i = 0; i < maxLength; i++) {
-            res += characters.charAt(rand.nextInt(characters.length()));
-        }
-        while(!bookingDAO.isConfirmationCodeUnique(res)){
-            res="";
-             for (int i = 0; i < maxLength; i++) {
-                res += characters.charAt(rand.nextInt(characters.length()));
-            }
-        }
-        return res;
-    }
+    
     public BigDecimal calulateTotalAmount(BigDecimal basePrice, Voucher voucher) {
         BigDecimal calcultedTotaAmount = null;
         if (voucher.isIsPercent()) {
@@ -456,7 +440,7 @@ public class BookingServlet extends HttpServlet {
         }
         return calcultedTotaAmount;
     }
-    public void checkInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    public boolean checkInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         String url = "/WEB-INF/Views/booking.jsp";
         HttpSession session=request.getSession();
         String checkInStr = request.getParameter("checkIn");
@@ -465,6 +449,8 @@ public class BookingServlet extends HttpServlet {
         String lastName = request.getParameter("lastName");
         String guestEmail = request.getParameter("guestEmail");
 
+        
+        
         if (checkInStr == null || checkInStr.isEmpty() || 
             checkOutStr == null || checkOutStr.isEmpty() ||
             firstName == null || firstName.isEmpty() ||
@@ -472,7 +458,16 @@ public class BookingServlet extends HttpServlet {
             guestEmail == null || guestEmail.isEmpty()) {
             request.setAttribute("bookingMessage", "Please fill in all required fields.");
             getServletContext().getRequestDispatcher(url).forward(request, response);
+            return false;
         }
+        //check if not unicode characters
+        else if(!firstName.matches("^[\\p{L}\\s]+$") ||
+                !lastName.matches("^[\\p{L}\\s]+$")){
+            request.setAttribute("bookingMessage", "Please dont type in special characters.");
+            getServletContext().getRequestDispatcher(url).forward(request, response);
+            return false;
+        }
+        return true;
     }
     public void persistInput(HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -490,13 +485,13 @@ public class BookingServlet extends HttpServlet {
             session.setAttribute("checkOut", checkOut);
         }
         if (firstName != null && !firstName.isEmpty()) {
-            session.setAttribute("firstName", firstName);
+            session.setAttribute("firstName", firstName.trim());
         }
         if (lastName != null && !lastName.isEmpty()) {
-            session.setAttribute("lastName", lastName);
+            session.setAttribute("lastName", lastName.trim());
         }
         if (guestEmail != null && !guestEmail.isEmpty()) {
-            session.setAttribute("guestEmail", guestEmail);
+            session.setAttribute("guestEmail", guestEmail.trim());
         }
     }
     
@@ -507,5 +502,11 @@ public class BookingServlet extends HttpServlet {
         session.removeAttribute("firstName");
         session.removeAttribute("lastName");
         session.removeAttribute("guestEmail");
+        session.removeAttribute("booking");
+        session.removeAttribute("bookedRooms");
+        session.removeAttribute("guestName");
+        session.removeAttribute("totalGuest");
+        session.removeAttribute("totalAmount");
+        session.removeAttribute("voucher");
     }
 }
