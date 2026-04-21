@@ -3,6 +3,11 @@ package com.mycompany.ltw.model;
 import java.sql.Timestamp;
 
 public class Voucher {
+    /*
+     * Model Voucher (liên quan Module 5.2):
+     * - Đại diện dữ liệu voucher hiển thị ở màn hình /vouchers.
+     * - Được UserDAO map từ bảng voucher.
+     */
     private Long id;
     private String code;
     private double discountValue;

@@ -4,6 +4,11 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class User {
+    /*
+     * Model User (dùng trong Module 5.2):
+     * - Đại diện dữ liệu tài khoản người dùng.
+     * - Được map từ bảng `user` và kèm danh sách role từ `user_roles`.
+     */
     private Long id;
     private String firstName;
     private String lastName;

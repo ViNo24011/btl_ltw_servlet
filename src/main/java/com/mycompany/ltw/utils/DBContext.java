@@ -8,9 +8,9 @@ public class DBContext {
 
     private static final String serverName = "localhost";
     private static final String dbName = "hotel_booking_db";
-    private static final String portNumber = "3306";
+    private static final String portNumber = "3307";
     private static final String userID = "root";
-    private static final String password = "241105"; // Thay pass vào đây
+    private static final String password = "123456"; // Thay pass vào đây
 
 
 

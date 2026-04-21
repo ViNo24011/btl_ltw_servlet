@@ -9,6 +9,16 @@ import com.mycompany.ltw.model.User;
 
 @WebFilter(filterName = "AuthFilter", urlPatterns = {"/admin/*", "/profile"})
 public class AuthFilter implements Filter {
+    /*
+     * AuthFilter (hỗ trợ Module 5.2):
+     * - Chặn người chưa đăng nhập truy cập /profile và /admin/*
+     * - Kiểm tra ROLE_ADMIN khi truy cập URL admin
+     *
+     * Input: HttpSession + request URI
+     * Output:
+     * - Cho đi tiếp (chain.doFilter) nếu hợp lệ
+     * - Redirect /login hoặc /access-denied.jsp nếu không hợp lệ
+     */
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

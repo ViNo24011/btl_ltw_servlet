@@ -1,6 +1,21 @@
 ﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%--
+  Module 5.2 - profile.jsp
+  Mục đích:
+  - Hiển thị hồ sơ cá nhân user
+  - Hiển thị tổng booking, ngày tham gia, nhóm khách hàng
+  - Hiển thị form sửa hồ sơ khi editMode = true
+
+  Input (từ UserServlet.setAttribute):
+  - profileUser, totalBookings, customerGroup, editMode, error
+  - param.success (khi cập nhật thành công)
+
+  Output:
+  - Render dữ liệu lên giao diện
+  - Submit POST /profile/edit với firstName, lastName, email
+--%>
 <!DOCTYPE html>
 <html lang="en">
 <head>

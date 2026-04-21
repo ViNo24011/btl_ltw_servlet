@@ -1,6 +1,18 @@
 ﻿<%@page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+            <%--
+              Module 5.2 - voucher.jsp
+              Mục đích:
+              - Hiển thị danh sách voucher hiện có của user
+              - Hiển thị thông báo voucher mới nếu số lượng tăng so với lần xem trước
+
+              Input:
+              - vouchers, customerGroup, newVoucherMessage
+
+              Output:
+              - Render danh sách voucher khả dụng ra giao diện
+            --%>
             <!DOCTYPE html>
             <html lang="en">
 

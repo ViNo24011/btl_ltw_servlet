@@ -1,5 +1,17 @@
 ﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--
+  Module 5.2 - user-form.jsp
+  Mục đích:
+  - Form thêm/sửa tài khoản cho admin
+
+  Input:
+  - formUser (khi sửa), currentRole, error
+
+  Output:
+  - Submit POST /admin/users/create hoặc POST /admin/users/edit
+  - Truyền các field: id, firstName, lastName, email, password, roleName, isActive
+--%>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -22,9 +22,31 @@ import javax.servlet.http.HttpSession;
 })
 public class UserServlet extends HttpServlet {
 
+    /*
+     * ========================= MODULE 5.2 - UserServlet =========================
+     * Mục đích:
+     * - Điều phối toàn bộ chức năng User Module:
+     *   + Hồ sơ cá nhân (xem/sửa)
+     *   + Voucher khả dụng
+     *   + CRUD tài khoản ở màn hình Admin
+     *
+     * Input chính:
+     * - URL: request.getServletPath()
+     * - Form: firstName, lastName, email, password, roleName, isActive, id
+     * - Session: user đang đăng nhập
+     *
+     * Output chính:
+     * - Forward tới JSP: profile.jsp, voucher.jsp, user.jsp, user-form.jsp
+     * - Redirect: /login, /home, /profile?success=..., /admin/users?success/error=...
+     *
+     * Ghi chú luồng:
+     * - Servlet KHÔNG viết SQL trực tiếp.
+     * - Tất cả đọc/ghi DB đều đi qua UserDAO.
+     * ========================================================================
+     */
     private final UserDAO userDAO = new UserDAO();
 
-    // Dieu huong GET theo tung endpoint cua user/admin.
+    // Điều hướng GET theo từng endpoint của user/admin.
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -55,7 +77,7 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // Dieu huong POST cho cac thao tac cap nhat/CRUD.
+    // Điều hướng POST cho các thao tác cập nhật/CRUD.
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -79,7 +101,9 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // Hien thi ho so user va thong tin thong ke booking/nhom KH.
+    // Input: session user id, editMode.
+    // Output: profileUser + totalBookings + customerGroup -> profile.jsp.
+    // Mục đích: hiển thị hồ sơ cá nhân + thống kê booking + nhóm khách hàng.
     private void showProfile(HttpServletRequest request, HttpServletResponse response, boolean editMode)
             throws ServletException, IOException {
         User sessionUser = getSessionUser(request);
@@ -104,7 +128,9 @@ public class UserServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/Views/profile.jsp").forward(request, response);
     }
 
-    // Cap nhat thong tin co ban cua ho so ca nhan.
+    // Input: firstName, lastName, email (POST /profile/edit).
+    // Output: UPDATE bảng user, cập nhật session, redirect kết quả.
+    // Mục đích: cập nhật thông tin hồ sơ cá nhân.
     private void updateProfile(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         User sessionUser = getSessionUser(request);
@@ -141,7 +167,9 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // Hien thi danh sach voucher kha dung va thong bao voucher moi.
+    // Input: session user id + lastVoucherCount trong session.
+    // Output: vouchers + customerGroup + newVoucherMessage -> voucher.jsp.
+    // Mục đích: hiển thị voucher hiện có và thông báo voucher mới.
     private void showVouchers(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User sessionUser = getSessionUser(request);
@@ -165,7 +193,9 @@ public class UserServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/Views/voucher.jsp").forward(request, response);
     }
 
-    // Hien thi danh sach user cho admin.
+    // Input: session user (bắt buộc ROLE_ADMIN).
+    // Output: users -> user.jsp.
+    // Mục đích: hiển thị danh sách tài khoản cho admin.
     private void showUsersForAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User sessionUser = getSessionUser(request);
@@ -179,7 +209,9 @@ public class UserServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/Views/user.jsp").forward(request, response);
     }
 
-    // Hien thi form them/sua user cho admin.
+    // Input: id (nếu là edit).
+    // Output: formUser/currentRole -> user-form.jsp.
+    // Mục đích: mở form thêm/sửa tài khoản từ trang admin.
     private void showUserFormForAdmin(HttpServletRequest request, HttpServletResponse response, Long userId)
             throws ServletException, IOException {
         User sessionUser = getSessionUser(request);
@@ -203,7 +235,9 @@ public class UserServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/Views/user-form.jsp").forward(request, response);
     }
 
-    // Tao tai khoan moi tu man hinh admin.
+    // Input: firstName, lastName, email, password, roleName, isActive.
+    // Output: INSERT user + user_roles, redirect về danh sách user.
+    // Mục đích: admin tạo tài khoản mới.
     private void createUserByAdmin(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         User sessionUser = getSessionUser(request);
@@ -241,7 +275,9 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // Cap nhat thong tin va quyen user tu man hinh admin.
+    // Input: id + thông tin user + role + password (có thể rỗng).
+    // Output: UPDATE user + cập nhật role mapping.
+    // Mục đích: admin chỉnh sửa tài khoản.
     private void updateUserByAdmin(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         User sessionUser = getSessionUser(request);
@@ -285,7 +321,9 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    // Xoa tai khoan user do admin yeu cau (tru chinh minh).
+    // Input: id user cần xóa.
+    // Output: DELETE user_roles trước, sau đó DELETE user.
+    // Mục đích: admin xóa tài khoản (trừ chính mình).
     private void deleteUserByAdmin(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         User sessionUser = getSessionUser(request);

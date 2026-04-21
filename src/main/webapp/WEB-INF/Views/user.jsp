@@ -1,6 +1,21 @@
 ﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%--
+  Module 5.2 - user.jsp
+  Mục đích:
+  - Trang quản lý danh sách user cho admin
+  - Hiển thị các thao tác CRUD: thêm, sửa, xóa user
+
+  Input:
+  - users (List<User>) từ UserServlet
+  - param.success, param.error để hiển thị thông báo
+
+  Output:
+  - Render bảng user
+  - Gửi POST /admin/users/delete khi bấm xóa
+  - Điều hướng GET /admin/users/create và /admin/users/edit?id=...
+--%>
 <!DOCTYPE html>
 <html lang="en">
 <head>

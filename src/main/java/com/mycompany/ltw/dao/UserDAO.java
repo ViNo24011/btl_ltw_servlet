@@ -13,6 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO extends DBContext {
+    /*
+     * =========================== MODULE 5.2 - UserDAO ===========================
+     * Mục đích:
+     * - Chứa toàn bộ câu lệnh SQL của User Module.
+     * - Là tầng truy cập dữ liệu (DAO) cho UserServlet.
+     *
+     * Input:
+     * - Tham số từ servlet (email, userId, User, roleName, password...)
+     * - Kết nối DB từ DBContext.getConnection()
+     *
+     * Output:
+     * - Dữ liệu trả về cho servlet: User, List<User>, List<Voucher>, Role list
+     * - Kết quả thao tác ghi DB: boolean thành công/thất bại
+     *
+     * Bảng dữ liệu sử dụng:
+     * - user, role, user_roles, booking, voucher, user_voucher_usage
+     * ========================================================================
+     */
 
     // Xac thuc dang nhap bang email + mat khau + trang thai active.
     public User login(String email, String password) {

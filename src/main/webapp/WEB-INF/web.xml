@@ -73,6 +73,15 @@
         <url-pattern>/roomtype</url-pattern>
     </servlet-mapping>
 
+    <!--
+      MODULE 5.2 - USER
+      Mục đích:
+      - Mapping các URL của User Module về UserServlet.
+      Input:
+      - Request URL từ client.
+      Output:
+      - UserServlet xử lý nghiệp vụ và forward/redirect tương ứng.
+    -->
     <!-- USER SERVLET -->
     <servlet>
         <servlet-name>UserServlet</servlet-name>
