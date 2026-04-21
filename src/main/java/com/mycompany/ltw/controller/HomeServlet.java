@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import com.mycompany.ltw.model.User;
 import com.mycompany.ltw.dao.AdminDAO;
 import com.mycompany.ltw.dao.BookingDAO;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 @WebServlet(name = "HomeServlet", urlPatterns = {"/home"})
 public class HomeServlet extends HttpServlet {
@@ -26,6 +28,55 @@ public class HomeServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         boolean isAdmin = false;
+        String action=request.getParameter("action");
+        if ("search-free-rooms".equals(action)){
+            String checkInStr = request.getParameter("checkInSearch");
+            String checkOutStr = request.getParameter("checkOutSearch");
+
+            LocalDate checkIn = null;
+            LocalDate checkOut = null;
+
+            try {
+                if (checkInStr != null && !checkInStr.isBlank()) {
+                    checkIn = LocalDate.parse(checkInStr);
+                }
+                if (checkOutStr != null && !checkOutStr.isBlank()) {
+                    checkOut = LocalDate.parse(checkOutStr);
+                }
+
+            } catch (Exception e) {
+                System.out.println("Invalid date input: " + checkInStr + " / " + checkOutStr);
+            }
+
+
+            BookingDAO bookingDAO = new BookingDAO();
+            try {
+                List<Room> freeRooms = bookingDAO.getFreeRooms(checkIn, checkOut);
+                request.setAttribute("allRooms", freeRooms);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            request.setAttribute("checkInSearch", checkInStr);
+            request.setAttribute("checkOutSearch", checkOutStr);
+            request.setAttribute("roomTypes", new RoomTypeDAO().getAll());
+
+            request.getRequestDispatcher("/WEB-INF/Views/index.jsp").forward(request, response);
+            return;
+        }
+        else if("clear-search".equals(action)){
+            request.setAttribute("checkInSearch", null);
+            request.setAttribute("checkOutSearch",null);
+            RoomDAO roomDAO = new RoomDAO();
+            try {
+                List<Room> rooms = roomDAO.getAll();
+                request.setAttribute("allRooms", rooms);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            request.getRequestDispatcher("/WEB-INF/Views/index.jsp").forward(request, response);
+            return;
+        }
         if (user != null) {
             isAdmin = user.getRoles().stream().anyMatch(r -> "ROLE_ADMIN".equals(r.getName()));
         }

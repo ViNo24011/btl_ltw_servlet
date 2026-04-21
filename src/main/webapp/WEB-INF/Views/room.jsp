@@ -138,6 +138,7 @@
         .btn.book {
             background: linear-gradient(120deg,var(--accent),var(--accent-strong));
             color: #fff;
+            border: hidden;
         }
 
         /* PAGINATION */
@@ -197,7 +198,7 @@
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
                     <a href="${pageContext.request.contextPath}/profile">
-                        ${sessionScope.user.firstName}
+                        Profile
                     </a>
                     <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </c:when>
@@ -240,7 +241,8 @@
                             <input type="hidden" name="action" value="bookRooms">
                             <input type="hidden" name="roomId" value="${r.id}">
                             <input type="hidden" name="currentPage" value="${currentPage}">
-                            <button type="submit" class="btn btn-custom btn-sm">
+                            <button type="submit" class="btn book" 
+                                    onclick="return confirm('The room you've selected is now in My Booking');">
                                Book
                             </button>
                         </form>                    

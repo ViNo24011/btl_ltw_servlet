@@ -1,10 +1,11 @@
 package com.mycompany.ltw.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Booking {
+public class Booking implements Serializable{
     private Long id;
     private Long userId;
     private Long voucherId;

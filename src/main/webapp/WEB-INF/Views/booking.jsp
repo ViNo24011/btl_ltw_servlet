@@ -312,9 +312,9 @@
             color: white;
             border-radius: 4px;
             border: none;
-            padding: 8px 16px;
+            padding: 8px;
             display: block;
-            margin: 15px auto 0;
+            margin: 15px;
             cursor: pointer;
         }
 
@@ -376,6 +376,12 @@
             border-radius: 6px;
             margin: 10px 0;
             text-align: center;
+        }     
+        .form-group-voucher {
+            display: grid;
+            grid-template-columns: 120px 1fr 1fr 1fr;
+            align-items: center;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -399,6 +405,7 @@
             <a href="${pageContext.request.contextPath}/booking">My Booking</a>
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
+                    <a href="${pageContext.request.contextPath}/home">Home</a>
                     <a href="${pageContext.request.contextPath}/profile">Profile</a>
                     <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </c:when>
@@ -409,28 +416,49 @@
         </nav>
     </header>
     <div style="border: 1px solid #ccc; padding: 50px;margin-top: 10px; border-radius: 10px; background: white; min-width: 400px;">
-        <!-- voucher -->
         <label class="brand"><strong>Booking</strong></label>
         <form class="form-box" action="booking" method="post">
-            <input type="hidden" name="action" value="getVouchers">
-            
+            <input type="hidden" name="bookingType" value="${sessionScope.bookingType}">
             <div class="form-group">
-                <label>Voucher:</label>
-                <input type="text" name="voucherCode" placeholder="Enter voucher code" required>
+                <label>Check in:</label>
+                <input type="date" name="checkIn" value="${sessionScope.checkIn}" >
             </div>
+            <div class="form-group">
+                <label>Check out:</label>
+                <input type="date" name="checkOut" value="${sessionScope.checkOut}" >
+            </div>
+            <div class="form-group">
+                <label>First Name:</label>
+                <input type="text" name="firstName" value="${sessionScope.firstName}" ${not empty sessionScope.user ? "readonly" : ""} >
+            </div>
+
+            <div class="form-group">
+                <label>Last Name:</label>
+                <input type="text" name="lastName" value="${sessionScope.lastName}" ${not empty sessionScope.user ? "readonly" : ""} >
+            </div>
+
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="guestEmail" value="${sessionScope.guestEmail}" ${not empty sessionScope.user ? "readonly" : ""} >
+            </div>
+
+            <div class="form-group-voucher">
+                <label>Voucher:</label>
+                <input type="text" name="voucherCode">
+                <button type="submit" name="action" value="applyVoucher">Apply Voucher</button>
+                <button type="submit" name="action" value="removeVoucher" style="background-color: gray;">Remove Voucher</button>
+            </div>
+
             <c:if test="${not empty voucherMessage}">
                 <span class="error-message">${voucherMessage}</span>
             </c:if>
-            <button type="submit">Apply Voucher</button>
-            
-        </form>
-        <c:if test="${not empty voucher}">
-            <div class="voucher-tabe-container">
+
+            <c:if test="${not empty voucher}">
                 <table>
                     <tr>
                         <td><strong>Voucher Code</strong></td>
                         <td><strong>Expiry Date</strong></td>
-                        <td><strong>Value</strong></td>   
+                        <td><strong>Value</strong></td>
                     </tr>
                     <tr>
                         <td>${voucher.code}</td>
@@ -441,102 +469,66 @@
                                     ${voucher.discountValue}%
                                 </c:when>
                                 <c:otherwise>
-                                    ${voucher.discountValue}
+                                    -${voucher.discountValue} VND
                                 </c:otherwise>
                             </c:choose>
                         </td>
                     </tr>
-                </table>
-            
+                </table>    
+            </c:if>
+            <table>
+                <tr>
+                    <th>Room</th>
+                    <th>Adults</th>
+                    <th>Children</th>
+                    <th>Max</th>
+                    <th>Type</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Remove</th>
+                </tr>
 
-                <form action="booking" method="post">
-                    <input type="hidden" name="action" value="removeVoucher">
-                    <button type="submit" style="background-color: gray;">Remove Voucher</button>
-                </form>
-            </div>
-        </c:if>
-        <!-- Booking -->
-        <form class="form-box" action="booking" method="post">
-            <input type="hidden" name="action" value="createBooking">
-            <input type="hidden" name="bookingType" value="${sessionScope.bookingType}">
-            <div class="form-group">
-                <label>Check in date:</label>
-                <input type="date" name="checkIn" value="${sessionScope.checkIn}" required>
-            </div>
-            <div class="form-group">
-                <label>Check out date:</label>
-                <input type="date" name="checkOut" value="${sessionScope.checkOut}" required>
-            </div>
-            <div class="form-group">
-                <label>First Name:</label>
-                <input name="firstName" value="${sessionScope.firstName}" ${not empty sessionScope.user ? "readonly" : ""} required>
-            </div>
+                <c:forEach var="room" items="${sessionScope.selectedRooms}">
+                    <tr>
+                        <td>${room.roomNumber}</td>
 
-            <div class="form-group">
-                <label>Last Name:</label>
-                <input name="lastName" value="${sessionScope.lastName}" ${not empty sessionScope.user ? "readonly" : ""} required>
-            </div>
+                        <td>
+                            <input name="numAdults-${room.id}" type="number" value="0" min="0">
+                        </td>
 
-            <div class="form-group">
-                <label>Email:</label>
-                <input name="guestEmail" value="${sessionScope.guestEmail}" ${not empty sessionScope.user ? "readonly" : ""} required>
-            </div>
+                        <td>
+                            <input name="numChildren-${room.id}" type="number" value="0" min="0">
+                        </td>
 
+                        <td>${room.roomType.maxCapacity}</td>
+                        <td>${room.roomType.name}</td>
+                        <td>${room.roomType.basePrice} VND/night</td>
 
+                        <td>
+                            <c:if test="${not empty roomErrors[room.id]}">
+                                <span class="error-message">${roomErrors[room.id]}</span>
+                            </c:if>
+                        </td>
 
+                        <td>
+                            <button type="submit" 
+                                    name="removeRoomId" 
+                                    value="${room.id}" 
+                                    formaction="booking?action=removeRoomById" 
+                                    formmethod="post">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
             <c:if test="${not empty bookingMessage}">
                 <span class="error-message">${bookingMessage}</span>
             </c:if>
-
-            <div class="table-container">
-                <table>
-                    <tr>
-                        <th>Selected rooms</th>
-                        <th>Number of adults</th>
-                        <th>Number of children</th>
-                        <th>Max capacity</th>
-                        <th>Room type</th>
-                        <th>Price</th>
-                        <th>Status</th>
-                    </tr>
-
-                    <c:forEach var="room" items="${sessionScope.selectedRooms}">
-                        <tr>
-                            <td>${room.roomNumber}</td>
-                            <td>
-                                <input name="numAdults-${room.id}" type="number" value="0" min="0" required>
-                            </td>
-                            <td>
-                                <input name="numChildren-${room.id}" type="number" value="0" min="0" required>
-                            </td>
-                            <td>${room.roomType.maxCapacity}</td>
-                            <td>${room.roomType.name}</td>
-                            <td>${room.roomType.basePrice}</td>
-                            <td>
-                                <c:if test="${not empty roomErrors[room.id]}">
-                                    <span class="error-message">
-                                        ${roomErrors[room.id]}
-                                    </span>
-                                </c:if>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
+            <div style="display:flex; gap:20px; justify-content:center; margin-top:15px;">
+                <button type="button" onclick="history.back()">Back</button>
+                <button type="submit" name="action" value="proceedPayment">Proceed payment</button>
             </div>
-                <div style="display:flex; gap:50px; justify-content:center; align-items:center; margin-top:15px;">
-                <button type="button" style="margin:0;" onclick="history.back()">
-                    Back
-                </button>
-                <button type="submit" style="margin:0;">
-                    Proceed payment
-                </button>
-            </div>
-        </form>
-        <form action="booking" method="post" style="display:flex; gap:10px; align-items:center; margin-top: 10px;">
-            <label>Enter room number to remove:</label>
-            <input type="text" name="roomNumber">
-            <input type="hidden" name="action" value="removeRoomByNumber">
-            <button type="submit" style="display:inline; margin:0;">Remove</button>
         </form>
     </div>
 </main>

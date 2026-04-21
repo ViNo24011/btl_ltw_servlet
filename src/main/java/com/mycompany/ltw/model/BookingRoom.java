@@ -1,8 +1,9 @@
 package com.mycompany.ltw.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class BookingRoom {
+public class BookingRoom implements Serializable{
     private Long id;
     private Long bookingId;
     private Long roomId;

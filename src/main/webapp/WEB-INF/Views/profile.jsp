@@ -199,7 +199,7 @@
         <nav class="menu">
             <a href="${pageContext.request.contextPath}/home">Home</a>
             <a href="${pageContext.request.contextPath}/vouchers">Vouchers</a>
-            <a href="${pageContext.request.contextPath}/booking-history">Booking History</a>
+            <a href="${pageContext.request.contextPath}/booking?action=bookingHistory">Booking History</a>
             <a href="${pageContext.request.contextPath}/logout">Logout</a>
         </nav>
     </header>
@@ -239,6 +239,7 @@
             <div class="actions">
                 <a class="btn" href="${pageContext.request.contextPath}/room">Browse all rooms</a>
                 <a class="btn" href="${pageContext.request.contextPath}/vouchers">View available vouchers</a>
+                <a class="btn" href="${pageContext.request.contextPath}/booking?action=bookingHistory">Booking History</a>
                 <a class="btn" href="${pageContext.request.contextPath}/profile/edit">Edit your profile</a>
             </div>
         </article>

@@ -79,7 +79,7 @@ public class BookingDAO extends DBContext {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, roomId);
-            ps.setDate(2, java.sql.Date.valueOf(checkOut)); // ⚠️ note order
+            ps.setDate(2, java.sql.Date.valueOf(checkOut)); 
             ps.setDate(3, java.sql.Date.valueOf(checkIn));
 
             ResultSet rs = ps.executeQuery();
@@ -329,11 +329,7 @@ public class BookingDAO extends DBContext {
 
         return true; // không tồn tại, unique
     }
-    public List<Room> getFreeRooms(LocalDate checkIn, LocalDate checkOut) throws SQLException {
-        
-        if( checkIn.isAfter(checkOut)){
-            return null;
-        }
+    public List<Room> getFreeRooms(LocalDate checkIn, LocalDate checkOut) throws SQLException {  
         List<Room> freeRooms = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
             "SELECT r.* " +
@@ -344,13 +340,17 @@ public class BookingDAO extends DBContext {
         List<Object> params = new ArrayList<>();
 
         if (checkIn != null && checkOut != null) {
+            if( checkIn.isAfter(checkOut)||checkIn.isEqual(checkOut)){
+                return null;
+            }
+            
             sql.append(
                 " AND NOT EXISTS ( " +
                 "   SELECT 1 FROM booking_room br " +
                 "   JOIN booking b ON b.id = br.booking_id " +
                 "   WHERE br.room_id = r.id " +
-                "   AND b.check_in <= ? " +
-                "   AND b.check_out >= ? " +
+                "   AND b.check_in < ? " +
+                "   AND b.check_out > ? " +
                 " ) "
             );
             params.add(checkOut);
@@ -361,7 +361,7 @@ public class BookingDAO extends DBContext {
                 "   SELECT 1 FROM booking_room br " +
                 "   JOIN booking b ON b.id = br.booking_id " +
                 "   WHERE br.room_id = r.id " +
-                "   AND b.check_out >= ? " +
+                "   AND b.check_out > ? " +
                 " ) "
             );
             params.add(checkIn);
@@ -371,7 +371,7 @@ public class BookingDAO extends DBContext {
                 "   SELECT 1 FROM booking_room br " +
                 "   JOIN booking b ON b.id = br.booking_id " +
                 "   WHERE br.room_id = r.id " +
-                "   AND b.check_in <= ? " +
+                "   AND b.check_in < ? " +
                 " ) "
             );
             params.add(checkOut);
@@ -400,4 +400,52 @@ public class BookingDAO extends DBContext {
         }
         return freeRooms;
     }
+    public Booking getById(long id) {
+        String sql = "SELECT * "
+                   + "FROM booking WHERE id = ? ";
+
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Booking b = new Booking();
+
+                    b.setId(rs.getLong("id"));
+                    b.setUserId(rs.getLong("user_id"));
+
+                    long voucherId = rs.getLong("voucher_id");
+                    if (rs.wasNull()) {
+                        b.setVoucherId(null);
+                    } else {
+                        b.setVoucherId(voucherId);
+                    }
+
+                    b.setCheckIn(rs.getDate("check_in").toLocalDate());
+                    b.setCheckOut(rs.getDate("check_out").toLocalDate());
+
+                    b.setGuestName(rs.getString("guest_name"));
+                    b.setGuestEmail(rs.getString("guest_email"));
+
+                    b.setTotalGuests(rs.getInt("total_guests"));
+                    b.setConfirmationCode(rs.getString("confirmation_code"));
+                    b.setTotalAmount(rs.getBigDecimal("total_amount"));
+                    b.setStatus(rs.getString("status"));
+
+                    b.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+                    return b;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    
 }

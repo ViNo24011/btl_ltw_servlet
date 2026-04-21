@@ -126,8 +126,8 @@
             border-radius: 20px;
             padding: 18px;
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 12px;
+            grid-template-columns: 4fr 1fr;
+            gap: 10px;
             box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
         }
 
@@ -416,6 +416,11 @@
             .filter-box select { min-width: 100%; }
             .pager { width: 100%; justify-content: flex-start; }
         }
+        .search-form{
+            display: grid;
+            grid-template-columns: auto auto auto;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -496,22 +501,26 @@
             </c:forEach>
         </div>
     </section>
+    <section class="search-card">
+        <form class ="search-form" action="home" method="get">   
+            <input type="hidden" name="action" value="search-free-rooms">
+            <div class="field">
+                <label>Check-in Date:</label>
+                <input name="checkInSearch" type="date" value="${checkInSearch}">
+            </div>
+            <div class="field">
+                <label>Check-out Date:</label>
+                <input name="checkOutSearch" value="${checkOutSearch}" type="date">
+            </div>
+           
+            <button class="search-btn" type="submit">Search</button>
+        </form>
+        <form style="display: grid;" action="home" method="get">
+            <input type="hidden" name="action" value="clear-search">
+            <button class="search-btn" type="submit">Reset</button>
+        </form>
         
-    <form class="search-card" action="room" method="get">   
-        <input type="hidden" name="action" value="search">
-        <div class="field">
-            <label>Check-in Date:</label>
-            <input name="checkInSearch" type="date" value="${checkInSearch}">
-        </div>
-        <div class="field">
-            <label>Check-out Date:</label>
-            <input name="checkOutSearch" value="${checkOutSearch}" type="date">
-        </div>
-        
-        
-        <button class="search-btn" type="submit">Search</button>
-    </form>
-        
+    </section>
     <section class="section booking-list" id="bookings">
         <div class="list-head">
             <div class="filter-box">

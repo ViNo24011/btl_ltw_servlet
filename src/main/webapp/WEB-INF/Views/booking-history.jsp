@@ -173,23 +173,7 @@
                 background: linear-gradient(120deg, var(--accent), var(--accent-strong));
             }
 
-            form .field { margin-bottom: 12px; }
-            form label { display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 700; }
-            form input {
-                width: 100%;
-                border-radius: 12px;
-                border: 1px solid #d1d5db;
-                padding: 11px 12px;
-                font: inherit;
-            }
 
-            form input:focus {
-                outline: none;
-                border-color: var(--accent);
-                box-shadow: 0 0 0 3px rgba(166, 77, 121, 0.16);
-            }
-
-            .form-actions { display: flex; gap: 10px; margin-top: 12px; }
 
             @media (max-width: 900px) {
                 .topbar { flex-direction: column; align-items: flex-start; }
@@ -264,8 +248,14 @@
                 border: none;
                 padding: 8px 16px;
                 display: block;
-                margin: 15px auto 0;
                 cursor: pointer;
+            }
+            td form {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                margin: 0; /* remove extra spacing */
             }
         </style>
     </head>
@@ -276,7 +266,6 @@
                 <nav class="menu">
                     <a href="${pageContext.request.contextPath}/home">Home</a>
                     <a href="${pageContext.request.contextPath}/vouchers">Vouchers</a>
-                    <a href="${pageContext.request.contextPath}/booking-history">Booking History</a>
                     <a href="${pageContext.request.contextPath}/logout">Logout</a>
                     
                 </nav>
@@ -295,6 +284,7 @@
                                 <th>Total amount</th>
                                 <th>Status</th>
                                 <th>Created at</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -308,14 +298,21 @@
                                     <td>${booking.totalAmount}</td>
                                     <td>${booking.status}</td>
                                     <td>${booking.createdAt.toString().replace('T',' ')}</td>
-                                    <td class="hidden-table-border">
+                                    <td>
                                         <c:if test="${now.isBefore(booking.checkOut) && booking.status == 'PAID'}">
                                             <form action="booking" method="post" style="display:flex; gap:10px; align-items:center; margin-top: 10px;">                                         
                                                 <input type="hidden" name="action" value="cancelBooking">
                                                 <input type="hidden" name="cancelBookingId" value="${booking.id}">
                                                 <button onclick="return confirm('Are you sure you want to cancel?')">Cancel</button>
                                             </form>
-                                        </c:if>                                 
+                                        </c:if>  
+                                        <c:if test="${now.isBefore(booking.checkIn) && booking.status == 'UNPAID'}">
+                                            <form action="payment" method="get" style="display:flex; gap:10px; align-items:center; margin-top: 10px;">                                         
+                                                <input type="hidden" name="action" value="continuePayment">
+                                                <input type="hidden" name="selectedBookingId" value="${booking.id}">
+                                                <button style="background-color: green;">Continue payment</button>
+                                            </form>
+                                        </c:if>   
                                     </td>
                                 </tr>
                             </c:forEach>

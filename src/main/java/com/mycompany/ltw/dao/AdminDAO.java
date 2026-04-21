@@ -120,7 +120,7 @@ public class AdminDAO {
         List<Map<String, Object>> result = new ArrayList<>();
         String sql = "SELECT r.room_number, " +
                      "COUNT(CASE WHEN b.status IN ('PAID', 'CHECKED-IN', 'CHECKED-OUT') THEN br.id ELSE NULL END) as booking_count, " +
-                     "SUM(CASE WHEN b.status IN ('PAID', 'CHECKED-IN', 'CHECKED-OUT') THEN rt.base_price * DATEDIFF(b.check_out, b.check_in) ELSE 0 END) as revenue " +
+                     "SUM(CASE WHEN b.status IN ('PAID', 'CHECKED-IN', 'CHECKED-OUT') THEN br.price_at_booking ELSE 0 END) as revenue " +
                      "FROM room r " +
                      "JOIN room_type rt ON r.room_type_id = rt.id " +
                      "LEFT JOIN booking_room br ON r.id = br.room_id " +

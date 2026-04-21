@@ -39,10 +39,7 @@ public class UserServlet extends HttpServlet {
                 break;
             case "/vouchers":
                 showVouchers(request, response);
-                break;
-            case "/booking-history": 
-                getUserBooking(request, response); 
-                break;
+                break;           
             case "/admin/users":
                 showUsersForAdmin(request, response);
                 break;
@@ -311,49 +308,7 @@ public class UserServlet extends HttpServlet {
         boolean ok = userDAO.deleteUserByAdmin(id);
         response.sendRedirect(request.getContextPath() + "/admin/users?" + (ok ? "success=deleted" : "error=delete_failed"));
     }
-    private void getUserBooking(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-
-        String url = "/WEB-INF/Views/booking-history.jsp";
-        BookingDAO bookingDAO = new BookingDAO();
-
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-
-        // Check login
-        if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-
-        int page = 1;
-        int pageSize = 10;
-
-        // Prevent URL injection
-        String pageParam = request.getParameter("page");
-        if (pageParam != null) {
-            try {
-                page = Integer.parseInt(pageParam);
-            } catch (Exception e) {
-                page = 1;
-            }
-        }
-        request.setAttribute("now", LocalDate.now());
-        // Get total records
-        int totalBookings = bookingDAO.countUserBookings(user.getId());
-        int totalPages = (int) Math.ceil((double) totalBookings / pageSize);
-
-        // Get booking history
-        List<Booking> bookingHistory =bookingDAO.getUserBooking(user.getId(), page, pageSize);
-
-        // Set attributes
-        request.setAttribute("bookingHistory", bookingHistory);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-
-        // Forward to JSP
-        request.getRequestDispatcher(url).forward(request, response);
-    }
+    
 
     // Lay user dang dang nhap tu session hien tai.
     private User getSessionUser(HttpServletRequest request) {
